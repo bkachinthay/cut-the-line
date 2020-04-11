@@ -1,0 +1,11 @@
+node_modules
+/build
+/*.log
+*.lock
+
+package-lock.json
+/functions
+
+
+.env
+config.js
