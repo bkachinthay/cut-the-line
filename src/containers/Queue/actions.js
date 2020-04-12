@@ -1,12 +1,16 @@
 import vendorPusher from "../../vendorPusher";
 
 const actions = () => ({
-  setOrder({ queue }, order) {
-    const updatedQueue = [...queue, order];
+  setOrder({ queue, tokenNo }, order) {
+    const updatedQueue = [...queue, { ...order, tokenNo }];
     vendorPusher.trigger("client-queue-length-updated", {
       queue: updatedQueue.map(({ orderId }) => orderId),
     });
-    return { queue: updatedQueue };
+    vendorPusher.trigger("client-token-assigned", {
+      orderId: order.orderId,
+      tokenNo,
+    });
+    return { tokenNo: tokenNo + 1, queue: updatedQueue };
   },
   setStatus({ queue }, orderId, status) {
     const updatedQueue = queue.map((order) =>

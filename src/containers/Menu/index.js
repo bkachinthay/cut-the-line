@@ -10,6 +10,7 @@ function Menu({
   getMenu,
   setOrderStatus,
   setOrdersBefore,
+  setTokenNo,
   loading,
   payload,
   error,
@@ -28,7 +29,10 @@ function Menu({
     pusher.bind("client-queue-length-updated", ({ queue }) =>
       setOrdersBefore(queue)
     );
-  }, [getMenu, setOrderStatus, setOrdersBefore, vendorId]);
+    pusher.bind("client-token-assigned", ({ orderId, tokenNo }) =>
+      setTokenNo(orderId, tokenNo)
+    );
+  }, [getMenu, setOrderStatus, setOrdersBefore, setTokenNo, vendorId]);
   const vendorName = vendorId;
   let itemsList = null;
   if (loading) {

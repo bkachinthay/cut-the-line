@@ -42,6 +42,13 @@ const actions = ({ setState, getState }) => ({
       }),
     };
   },
+  setTokenNo({ orders }, orderId, tokenNo) {
+    return {
+      orders: orders.map((order) =>
+        order.orderId === orderId ? { ...order, tokenNo } : order
+      ),
+    };
+  },
 });
 
 export default actions;

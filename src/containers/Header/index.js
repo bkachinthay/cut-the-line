@@ -7,9 +7,9 @@ import { BackIcon } from "components/Icons";
 
 function backURL(currPath, vendorId) {
   if (currPath === "/orders") {
-    return [vendorId ? `/v/${vendorId}` : "", "Orders"];
+    return [vendorId ? `/v/${vendorId}` : "/", "Orders"];
   } else if (currPath === "/cart") {
-    return [vendorId ? `/v/${vendorId}` : "", "Cart"];
+    return [vendorId ? `/v/${vendorId}` : "/", "Cart"];
   } else if (/^\/v\/\w+\/?$/.test(currPath)) {
     return ["/", "Vendor"];
   } else if (currPath === "/") {

@@ -2,7 +2,7 @@ import { connect } from "redux-zero/preact";
 import Counter from "components/Counter";
 import { VegIcon } from "components/Icons";
 import Price from "components/Price";
-import { sum } from "utils";
+import sum from "utils/sum";
 import actions from "./actions";
 
 function Cart({ cart, vendorName, setItemCount, setOrder }) {
