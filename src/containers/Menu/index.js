@@ -28,7 +28,7 @@ function Menu({
     pusher.bind("client-queue-length-updated", ({ queue }) =>
       setOrdersBefore(queue)
     );
-  }, [vendorId]);
+  }, [getMenu, setOrderStatus, setOrdersBefore, vendorId]);
   const vendorName = vendorId;
   let itemsList = null;
   if (loading) {

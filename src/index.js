@@ -1,9 +1,7 @@
-console.log("process : ", process.env);
-
 import Router from "preact-router";
 import { Provider } from "redux-zero/preact";
 import store from "./store";
-import Header from "components/Header";
+import Header from "containers/Header";
 import Home from "containers/Home";
 import Menu from "containers/Menu";
 import Cart from "containers/Cart";

@@ -16,7 +16,6 @@ function Order({
   ordersBefore,
   items,
 }) {
-  console.log("order ordersbefore : ", ordersBefore);
   return (
     <div class="b--silver br2 pa2 shadow-1">
       <div class="flex">

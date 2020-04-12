@@ -3,7 +3,7 @@ import { fetchVendors, fetchMenu } from "api";
 const actions = ({ setState, getState }) => ({
   getMenu({ vendors = [] }, vendorId) {
     setState({
-      currVendor: null,
+      currVendor: { id: vendorId, name: "" },
       menu: { loading: true, payload: [], error: false },
     });
 
@@ -23,7 +23,7 @@ const actions = ({ setState, getState }) => ({
         return { currVendor, menu: { loading: false, payload, error: false } };
       })
       .catch((error) => ({
-        currVendor: null,
+        currVendor: {},
         menu: { loading: false, payload: [], error },
       }));
   },

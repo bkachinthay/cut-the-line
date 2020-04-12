@@ -9,7 +9,6 @@ const actions = ({ setState }) => ({
     return { cart: { ...cart, [id]: { ...prevItem, count } } };
   },
   setOrder(state, price) {
-    console.log("order state : ", state);
     const {
       cart,
       orders,
@@ -27,7 +26,7 @@ const actions = ({ setState }) => ({
     };
     pusher.trigger("client-order-placed", { order });
     order.ordersBefore = null;
-    setState({ orders: [order, ...orders] });
+    setState({ cart: {}, orders: [order, ...orders] });
     route("/orders");
     // placeOrder(cart)
     //   .then(({ status }) => {

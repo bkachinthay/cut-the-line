@@ -1,4 +1,11 @@
 import createStore from "redux-zero";
+import { applyMiddleware } from "redux-zero/middleware";
+
+const logger = (store) => (next, args) => (action) => {
+  console.log("current state : ", store.getState());
+  console.log("action : ", action.name, args);
+  return next(action);
+};
 
 const intialState = {
   vendors: { loading: false, payload: [], error: false },
@@ -9,6 +16,7 @@ const intialState = {
   queue: [],
 };
 
-const store = createStore(intialState);
+const middlewares = applyMiddleware(logger);
+const store = createStore(intialState, middlewares);
 
 export default store;

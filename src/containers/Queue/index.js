@@ -6,7 +6,6 @@ import actions from "./actions";
 
 function Queue({ queue, vendorId, setOrder, setStatus }) {
   useEffect(() => {
-    console.log("in queue use effect", vendorId, queue);
     vendorPusher.connect(vendorId);
     vendorPusher.subscribe(
       `presence-${vendorId}`,
@@ -14,11 +13,9 @@ function Queue({ queue, vendorId, setOrder, setStatus }) {
       () => console.log("subcribe failed")
     );
     vendorPusher.bind("client-order-placed", ({ order, userId, userName }) => {
-      console.log("queue recieved order : ", order);
       setOrder({ ...order, customerId: userId, customerName: userName });
     });
-  }, []);
-  console.log("in queue render : ", queue);
+  }, [vendorId, setOrder]);
   return (
     <ul class="list pl0 measure center">
       {queue.length === 0 && (

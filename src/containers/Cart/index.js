@@ -70,9 +70,9 @@ function Cart({ cart, vendorName, setItemCount, setOrder }) {
 }
 
 export default connect(
-  ({ cart, currVendor: { vendorName } }) => ({
+  ({ cart, currVendor: { name: vendorName = "" } }) => ({
     cart: Object.values(cart).filter((item) => item && item.count),
-    vendorName: vendorName || "",
+    vendorName,
   }),
   actions
 )(Cart);
