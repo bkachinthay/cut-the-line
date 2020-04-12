@@ -1,7 +1,7 @@
 import { connect } from "redux-zero/preact";
 import { Link } from "preact-router/match";
 import Price from "components/Price";
-import { sum } from "utils";
+import sum from "utils/sum";
 
 function CartPreview({ price, itemCount }) {
   if (!itemCount) {

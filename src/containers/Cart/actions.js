@@ -1,6 +1,6 @@
 import { route } from "preact-router";
 // import { placeOrder } from "api";
-import { sum } from "utils";
+import sum from "utils/sum";
 import pusher from "../../pusher";
 
 const actions = ({ setState }) => ({
@@ -26,6 +26,7 @@ const actions = ({ setState }) => ({
     };
     pusher.trigger("client-order-placed", { order });
     order.ordersBefore = null;
+    order.tokenNo = 0;
     setState({ cart: {}, orders: [order, ...orders] });
     route("/orders");
     // placeOrder(cart)

@@ -14,6 +14,7 @@ const intialState = {
   orders: [],
   currVendor: {},
   queue: [],
+  tokenNo: 1,
 };
 
 const middlewares = applyMiddleware(logger);

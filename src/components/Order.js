@@ -15,11 +15,12 @@ function Order({
   price,
   ordersBefore,
   items,
+  tokenNo,
 }) {
   return (
-    <div class="b--silver br2 pa2 shadow-1">
+    <div class="b--silver ba br2 pa2 shadow-1">
       <div class="flex">
-        <Token value={99} />
+        <Token value={tokenNo} />
         <div class="ml2">
           <h2 class="ma0 f4 lh-title">
             <span>{vendorName}</span>
