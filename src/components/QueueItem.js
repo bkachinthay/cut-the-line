@@ -1,8 +1,14 @@
 import Token from "./Token";
 import Price from "./Price";
 import OrderDetails from "./OrderDetails";
-
-const STATUS_ORDER = ["start", "ready", "complete"];
+import StatusLabel from "./StatusLabel";
+import {
+  STATUS_WAITING,
+  STATUS_PREPARING,
+  STATUS_READY,
+  STATUS_COMPLETE,
+  STATUS_ORDER,
+} from "utils/status";
 
 function isCovered(status, currStatus) {
   return (
@@ -19,7 +25,7 @@ function QueueItem({
   items,
   setStatus,
   tokenNo,
-  status = "waiting",
+  status = STATUS_WAITING,
 }) {
   return (
     <div class="b--silver ba br2 pa2 shadow-1">
@@ -28,7 +34,7 @@ function QueueItem({
         <div class="ml2 flex-auto">
           <h2 class="ma0 f4 lh-title">
             <span>Order by {customerName}</span>
-            <span class="fr ph2 pv1 bg-blue white">{status}</span>
+            <StatusLabel classes="fr" value={status} />
           </h2>
           <h3 class="ma0 f5 lh-title black-80">
             {itemCount} Items | <Price value={price} />
@@ -42,31 +48,31 @@ function QueueItem({
         <div class="flex">
           <button
             class={`flex-auto w-third button-reset fl pv2 tc b pointer ba br-0 bw1 b--dark-red br--left br3 ${
-              isCovered(status, "start")
+              isCovered(status, STATUS_PREPARING)
                 ? "bg-dark-red white"
                 : "bg-white dark-red"
             }`}
-            onClick={() => setStatus(orderId, "start")}
+            onClick={() => setStatus(orderId, STATUS_PREPARING)}
           >
             Preparing
           </button>
           <button
             class={`flex-auto w-third button-reset fl pv2 tc b pointer ba bw1 b--dark-red ${
-              isCovered(status, "ready")
+              isCovered(status, STATUS_READY)
                 ? "bg-dark-red white"
                 : "bg-white dark-red"
             }`}
-            onClick={() => setStatus(orderId, "ready")}
+            onClick={() => setStatus(orderId, STATUS_READY)}
           >
             Ready
           </button>
           <button
             class={`flex-auto w-third button-reset fl pv2 tc b pointer ba bl-0 bw1 b--dark-red br--right br3 ${
-              isCovered(status, "complete")
+              isCovered(status, STATUS_COMPLETE)
                 ? "bg-dark-red white"
                 : "bg-white dark-red"
             }`}
-            onClick={() => setStatus(orderId, "complete")}
+            onClick={() => setStatus(orderId, STATUS_COMPLETE)}
           >
             Picked up
           </button>

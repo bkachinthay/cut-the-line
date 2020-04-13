@@ -1,11 +1,9 @@
 import Token from "./Token";
 import Price from "./Price";
 import OrderDetails from "./OrderDetails";
-import Accordian from "components/Accordian";
-// Waiting :- This order is yet to be started on. There are {n} orders before you.
-// In Progress(Preparing) :- This order is being prepared.
-// Ready :- This order is ready to be Picked up. | Please pick up your order.
-// Completed(Picked up) :- This order is Completed.
+import Accordian from "./Accordian";
+import StatusLabel from "./StatusLabel";
+import StatusMessage from "./StatusMessage";
 
 function Order({
   // vendorId,
@@ -21,17 +19,16 @@ function Order({
     <div class="b--silver ba br2 pa2 shadow-1">
       <div class="flex">
         <Token value={tokenNo} />
-        <div class="ml2">
+        <div class="ml2 flex-auto">
           <h2 class="ma0 f4 lh-title">
             <span>{vendorName}</span>
-            <span class="fr ph2 pv1 bg-blue white">{status}</span>
+            <StatusLabel classes="fr" value={status} />
           </h2>
           <h3 class="ma0 f5 lh-title black-80">
             {itemCount} Items | <Price value={price} />
           </h3>
           <p class="ma0 mt2 lh-copy f5">
-            This order is yet to be started on. There are {ordersBefore} orders
-            before this.
+            <StatusMessage value={status} ordersBefore={ordersBefore} />
           </p>
         </div>
       </div>
