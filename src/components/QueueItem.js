@@ -27,6 +27,14 @@ function QueueItem({
   tokenNo,
   status = STATUS_WAITING,
 }) {
+  const toggleStatus = (orderId, buttonStatus) =>
+    setStatus(
+      orderId,
+      buttonStatus === status
+        ? STATUS_ORDER[STATUS_ORDER.indexOf(buttonStatus) - 1]
+        : buttonStatus
+    );
+
   return (
     <div class="b--silver ba br2 pa2 shadow-1">
       <div class="flex">
@@ -52,7 +60,7 @@ function QueueItem({
                 ? "bg-dark-red white"
                 : "bg-white dark-red"
             }`}
-            onClick={() => setStatus(orderId, STATUS_PREPARING)}
+            onClick={() => toggleStatus(orderId, STATUS_PREPARING)}
           >
             Preparing
           </button>
@@ -62,7 +70,7 @@ function QueueItem({
                 ? "bg-dark-red white"
                 : "bg-white dark-red"
             }`}
-            onClick={() => setStatus(orderId, STATUS_READY)}
+            onClick={() => toggleStatus(orderId, STATUS_READY)}
           >
             Ready
           </button>
@@ -72,7 +80,7 @@ function QueueItem({
                 ? "bg-dark-red white"
                 : "bg-white dark-red"
             }`}
-            onClick={() => setStatus(orderId, STATUS_COMPLETE)}
+            onClick={() => toggleStatus(orderId, STATUS_COMPLETE)}
           >
             Picked up
           </button>
