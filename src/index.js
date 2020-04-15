@@ -9,6 +9,7 @@ import OrderList from "containers/OrderList";
 import Queue from "containers/Queue";
 import Error from "components/Error";
 import "tachyons/css/tachyons.css";
+import "./index.css";
 
 function App() {
   return (

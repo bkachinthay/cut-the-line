@@ -10,6 +10,13 @@ import {
   STATUS_ORDER,
 } from "utils/status";
 
+const STATUSBAR_CLASS = {
+  STATUS_PREPARING: "bar-third",
+  STATUS_READY: "bar-two-third",
+  STATUS_COMPLETE: "bar-complete",
+  STATUS_WAITING: "",
+};
+
 function isCovered(status, currStatus) {
   return (
     STATUS_ORDER.indexOf(status) !== -1 &&
@@ -53,32 +60,26 @@ function QueueItem({
         <OrderDetails items={items} showPrice={false} />
       </div>
       <div class="mt3">
-        <div class="flex">
+        <div class={`flex br3 bar ${STATUSBAR_CLASS[status]}`}>
           <button
-            class={`flex-auto w-third button-reset fl pv2 tc b pointer ba br-0 bw1 b--dark-red br--left br3 ${
-              isCovered(status, STATUS_PREPARING)
-                ? "bg-dark-red white"
-                : "bg-white dark-red"
+            class={`flex-auto w-third button-reset fl pv2 tc b pointer ba br-0 bw1 b--red br--left br3 bg-transparent z-5 ${
+              isCovered(status, STATUS_PREPARING) ? "white" : "red"
             }`}
             onClick={() => toggleStatus(orderId, STATUS_PREPARING)}
           >
-            Preparing
+            Start
           </button>
           <button
-            class={`flex-auto w-third button-reset fl pv2 tc b pointer ba bw1 b--dark-red ${
-              isCovered(status, STATUS_READY)
-                ? "bg-dark-red white"
-                : "bg-white dark-red"
+            class={`flex-auto w-third button-reset fl pv2 tc b pointer ba bw1 b--red bg-transparent z-5 ${
+              isCovered(status, STATUS_READY) ? "white" : "red"
             }`}
             onClick={() => toggleStatus(orderId, STATUS_READY)}
           >
             Ready
           </button>
           <button
-            class={`flex-auto w-third button-reset fl pv2 tc b pointer ba bl-0 bw1 b--dark-red br--right br3 ${
-              isCovered(status, STATUS_COMPLETE)
-                ? "bg-dark-red white"
-                : "bg-white dark-red"
+            class={`flex-auto w-third button-reset fl pv2 tc b pointer ba bl-0 bw1 b--red br--right br3 bg-transparent z-5 ${
+              isCovered(status, STATUS_COMPLETE) ? "white" : "red"
             }`}
             onClick={() => toggleStatus(orderId, STATUS_COMPLETE)}
           >
