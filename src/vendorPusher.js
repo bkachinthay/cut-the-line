@@ -1,13 +1,30 @@
 import Pusher from "pusher-js";
 import config from "../config";
 
-Pusher.logToConsole = true;
+// Pusher.logToConsole = true;
 
 const pusher = {
   _pusher: null,
   channel: null,
   userId: null,
   userName: null,
+  init(userName, channelName, events = []) {
+    this.connect(userName);
+    this.subscribe(
+      channelName,
+      () => console.log("subscribe sucess"),
+      () => console.log("subscribe failed")
+    );
+    events.forEach(([name, cb]) => this.bind(name, cb));
+  },
+  destroy() {
+    if (this._pusher) {
+      this._pusher.disconnect();
+    }
+    this.channel = null;
+    this.userId = null;
+    this.userName = null;
+  },
   connect(username) {
     if (this._pusher === null) {
       this._pusher = new Pusher(config.pusherKey, {
@@ -21,9 +38,9 @@ const pusher = {
         this.userId = this._pusher.connection.socket_id;
         this.userName = username;
       });
-      this._pusher.bind_global((...args) =>
-        console.log("global event", ...args)
-      );
+      // this._pusher.bind_global((...args) =>
+      // console.log("global event", ...args)
+      // );
     }
   },
   subscribe(channelName, onSuccess, onError) {
@@ -47,12 +64,10 @@ const pusher = {
     }
   },
   bind(eventName, onConnect) {
-    console.log("bind handler", this.channel.bind);
     this.channel.bind("test", () => console.log("test triggered"));
     this.channel.bind(eventName, onConnect);
   },
   trigger(eventName, payload) {
-    console.log("trigger handler", this.channel.trigger);
     this.channel.trigger(eventName, {
       ...payload,
       userId: this.userId,

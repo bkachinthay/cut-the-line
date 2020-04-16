@@ -6,15 +6,14 @@ import actions from "./actions";
 
 function Queue({ queue, vendorId, setOrder, setStatus }) {
   useEffect(() => {
-    vendorPusher.connect(vendorId);
-    vendorPusher.subscribe(
-      `presence-${vendorId}`,
-      () => console.log("subscribe sucess", vendorPusher),
-      () => console.log("subcribe failed")
-    );
-    vendorPusher.bind("client-order-placed", ({ order, userId, userName }) => {
-      setOrder({ ...order, customerId: userId, customerName: userName });
-    });
+    vendorPusher.init(vendorId, `presence-${vendorId}`, [
+      [
+        "client-order-placed",
+        ({ order, userId, userName }) =>
+          setOrder({ ...order, customerId: userId, customerName: userName }),
+      ],
+    ]);
+    return vendorPusher.destroy;
   }, [vendorId, setOrder]);
   return (
     <ul class="list pl0 measure center">

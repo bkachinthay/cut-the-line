@@ -17,22 +17,17 @@ function Menu({
 }) {
   useEffect(() => {
     getMenu(vendorId);
-    pusher.connect("me");
-    pusher.subscribe(
-      `presence-${vendorId}`,
-      () => console.log("subscribe sucess", pusher),
-      () => console.log("subcribe failed")
-    );
-    pusher.bind("client-order-status-updated", ({ order }) =>
-      setOrderStatus(order)
-    );
-    pusher.bind("client-queue-length-updated", ({ queue }) =>
-      setOrdersBefore(queue)
-    );
-    pusher.bind("client-token-assigned", ({ orderId, tokenNo }) =>
-      setTokenNo(orderId, tokenNo)
-    );
-  }, [getMenu, setOrderStatus, setOrdersBefore, setTokenNo, vendorId]);
+  }, [getMenu, vendorId]);
+  useEffect(() => {
+    pusher.init("me", `presence-${vendorId}`, [
+      ["client-order-status-updated", ({ order }) => setOrderStatus(order)],
+      ["client-queue-length-updated", ({ queue }) => setOrdersBefore(queue)],
+      [
+        "client-token-assigned",
+        ({ orderId, tokenNo }) => setTokenNo(orderId, tokenNo),
+      ],
+    ]);
+  }, [setOrderStatus, setOrdersBefore, setTokenNo, vendorId]);
   const vendorName = vendorId;
   let itemsList = null;
   if (loading) {
