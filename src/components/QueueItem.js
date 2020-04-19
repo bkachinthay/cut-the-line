@@ -45,7 +45,7 @@ function QueueItem({
   return (
     <div class="b--silver ba br2 pa2 shadow-1">
       <div class="flex">
-        <Token value={tokenNo} />
+        {tokenNo ? <Token value={tokenNo} /> : null}
         <div class="ml2 flex-auto">
           <h2 class="ma0 f4 lh-title">
             <span>Order by {customerName}</span>
@@ -54,39 +54,48 @@ function QueueItem({
           <h3 class="ma0 f5 lh-title black-80">
             {itemCount} Items | <Price value={price} />
           </h3>
+          {/* <p class="ma0 mt2 lh-copy f5">
+            <button
+              class={`button-reset pv2 ph3 ba bw1 b--dark-red bg-white dark-red f5 fw5 grow pointer ttu fr`}
+            >
+              Restore
+            </button>
+          </p> */}
         </div>
       </div>
       <div class="mt3 bt b--black-20">
         <OrderDetails items={items} showPrice={false} />
       </div>
-      <div class="mt3">
-        <div class={`flex br3 bar ${STATUSBAR_CLASS[status]}`}>
-          <button
-            class={`flex-auto w-third button-reset fl pv2 tc b pointer ba br-0 bw1 b--red br--left br3 bg-transparent z-5 ${
-              isCovered(status, STATUS_PREPARING) ? "white" : "red"
-            }`}
-            onClick={() => toggleStatus(orderId, STATUS_PREPARING)}
-          >
-            Start
-          </button>
-          <button
-            class={`flex-auto w-third button-reset fl pv2 tc b pointer ba bw1 b--red bg-transparent z-5 ${
-              isCovered(status, STATUS_READY) ? "white" : "red"
-            }`}
-            onClick={() => toggleStatus(orderId, STATUS_READY)}
-          >
-            Ready
-          </button>
-          <button
-            class={`flex-auto w-third button-reset fl pv2 tc b pointer ba bl-0 bw1 b--red br--right br3 bg-transparent z-5 ${
-              isCovered(status, STATUS_COMPLETE) ? "white" : "red"
-            }`}
-            onClick={() => toggleStatus(orderId, STATUS_COMPLETE)}
-          >
-            Picked up
-          </button>
+      {status !== STATUS_COMPLETE ? (
+        <div class="mt3">
+          <div class={`flex br3 bar ${STATUSBAR_CLASS[status]}`}>
+            <button
+              class={`flex-auto w-third button-reset fl pv2 tc b pointer ba br-0 bw1 b--red br--left br3 bg-transparent z-2 ${
+                isCovered(status, STATUS_PREPARING) ? "white" : "red"
+              }`}
+              onClick={() => toggleStatus(orderId, STATUS_PREPARING)}
+            >
+              Start
+            </button>
+            <button
+              class={`flex-auto w-third button-reset fl pv2 tc b pointer ba bw1 b--red bg-transparent z-2 ${
+                isCovered(status, STATUS_READY) ? "white" : "red"
+              }`}
+              onClick={() => toggleStatus(orderId, STATUS_READY)}
+            >
+              Ready
+            </button>
+            <button
+              class={`flex-auto w-third button-reset fl pv2 tc b pointer ba bl-0 bw1 b--red br--right br3 bg-transparent z-2 ${
+                isCovered(status, STATUS_COMPLETE) ? "white" : "red"
+              }`}
+              onClick={() => toggleStatus(orderId, STATUS_COMPLETE)}
+            >
+              Picked up
+            </button>
+          </div>
         </div>
-      </div>
+      ) : null}
     </div>
   );
 }

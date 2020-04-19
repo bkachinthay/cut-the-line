@@ -1,13 +1,14 @@
 import { connect } from "redux-zero/preact";
 import Order from "components/Order";
+import actions from "./actions";
 
-function OrderList({ orders }) {
+function OrderList({ pastOrders = [], currOrders = [], reorder }) {
   return (
     <ul class="list pl0 measure center">
-      {orders.length === 0 && (
+      {/* {orders.length === 0 && (
         <li class="black-70 tc f4">{"No active Orders"}</li>
-      )}
-      {orders.map(
+      )} */}
+      {[...currOrders, ...pastOrders].map(
         ({
           orderId,
           vendorId,
@@ -21,6 +22,7 @@ function OrderList({ orders }) {
         }) => (
           <li key={orderId} class="mv3">
             <Order
+              orderId={orderId}
               vendorId={vendorId}
               vendorName={vendorName}
               status={status}
@@ -29,6 +31,7 @@ function OrderList({ orders }) {
               ordersBefore={ordersBefore}
               items={items}
               tokenNo={tokenNo}
+              reorder={reorder}
             />
           </li>
         )
@@ -37,4 +40,10 @@ function OrderList({ orders }) {
   );
 }
 
-export default connect(({ orders }) => ({ orders }))(OrderList);
+export default connect(
+  ({ pastOrders, currOrders }) => ({
+    pastOrders,
+    currOrders,
+  }),
+  actions
+)(OrderList);

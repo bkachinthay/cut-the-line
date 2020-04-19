@@ -2,6 +2,7 @@ import { connect } from "redux-zero/preact";
 import { route } from "preact-router";
 import Match from "preact-router/match";
 import { BackIcon } from "components/Icons";
+import Dropdown from "components/Dropdown";
 
 // "home" -> "menu" -> "cart" -> "orders"
 
@@ -20,11 +21,11 @@ function backURL(currPath, vendorId) {
 
 function Header({ vendorId }) {
   return (
-    <Match path="/:page/:id?">
+    <Match path="/">
       {({ path }) => {
         const [backUrl, heading] = backURL(path, vendorId);
         return (
-          <h1 class="mv0 w-100 bg-red white f3 fw3 pa2 lh-title flex items-center fixed top-0 mw7 z-999">
+          <h1 class="mv0 w-100 bg-red white f3 fw3 pa2 lh-title flex items-center fixed top-0 mw7 z-2">
             {backUrl && (
               <a
                 class="w2 h2 mr3 pointer no-underline"
@@ -33,7 +34,11 @@ function Header({ vendorId }) {
                 <BackIcon classes="w2" />
               </a>
             )}
-            <span>{heading}</span>
+            <span class="flex-auto">{heading}</span>
+            <Dropdown
+              align="left"
+              links={[{ link: "/vendor/orders", label: "Completed Orders" }]}
+            />
           </h1>
         );
       }}

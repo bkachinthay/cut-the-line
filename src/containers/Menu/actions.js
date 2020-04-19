@@ -1,4 +1,5 @@
 import { fetchVendors, fetchMenu } from "api";
+import { STATUS_COMPLETE } from "utils/status";
 
 const actions = ({ setState, getState }) => ({
   getMenu({ vendors = [] }, vendorId) {
@@ -27,27 +28,44 @@ const actions = ({ setState, getState }) => ({
         menu: { loading: false, payload: [], error },
       }));
   },
-  setOrderStatus({ orders }, { orderId, status } = {}) {
+  setOrderStatus({ currOrders, pastOrders }, { orderId, status } = {}) {
+    // ignore if updated order is not in users current orders.
+    if (currOrders.every((order) => order.orderId !== orderId)) {
+      return;
+    }
+
+    if (status === STATUS_COMPLETE) {
+      let completedOrder = currOrders.find(
+        (order) => order.orderId === orderId
+      );
+      return {
+        currOrders: currOrders.filter((order) => order.orderId !== orderId),
+        pastOrders: [{ ...completedOrder, status, tokenNo: 0 }, ...pastOrders],
+      };
+    }
     return {
-      orders: orders.map((order) =>
+      currOrders: currOrders.map((order) =>
         order.orderId === orderId ? { ...order, status } : order
       ),
     };
   },
-  setOrdersBefore({ orders }, queue) {
+  setOrdersBefore({ currOrders }, queue) {
     return {
-      orders: orders.map((order) => {
+      currOrders: currOrders.map((order) => {
         const ordersBefore = queue.indexOf(order.orderId);
         return ordersBefore > -1 ? { ...order, ordersBefore } : order;
       }),
     };
   },
-  setTokenNo({ orders }, orderId, tokenNo) {
+  setTokenNo({ currOrders }, orderId, tokenNo) {
     return {
-      orders: orders.map((order) =>
+      currOrders: currOrders.map((order) =>
         order.orderId === orderId ? { ...order, tokenNo } : order
       ),
     };
+  },
+  setConnState({}, updatedState) {
+    return { connState: updatedState };
   },
 });
 

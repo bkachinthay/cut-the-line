@@ -1,3 +1,4 @@
+import { STATUS_COMPLETE } from "utils/status";
 import Token from "./Token";
 import Price from "./Price";
 import OrderDetails from "./OrderDetails";
@@ -6,6 +7,7 @@ import StatusLabel from "./StatusLabel";
 import StatusMessage from "./StatusMessage";
 
 function Order({
+  orderId,
   // vendorId,
   vendorName,
   status,
@@ -14,11 +16,12 @@ function Order({
   ordersBefore,
   items,
   tokenNo,
+  reorder,
 }) {
   return (
     <div class="b--silver ba br2 pa2 shadow-1">
       <div class="flex">
-        <Token value={tokenNo} />
+        {tokenNo ? <Token value={tokenNo} /> : null}
         <div class="ml2 flex-auto">
           <h2 class="ma0 f4 lh-title">
             <span>{vendorName}</span>
@@ -28,7 +31,15 @@ function Order({
             {itemCount} Items | <Price value={price} />
           </h3>
           <p class="ma0 mt2 lh-copy f5">
-            <StatusMessage value={status} ordersBefore={ordersBefore} />
+            <StatusMessage value={status} ordersBefore={ordersBefore} />{" "}
+            {status === STATUS_COMPLETE ? (
+              <button
+                class="fr button-reset pv2 ph3 ba bw1 b--dark-red bg-white dark-red f5 fw5 grow pointer ttu"
+                onClick={() => reorder(orderId)}
+              >
+                Reorder
+              </button>
+            ) : null}
           </p>
         </div>
       </div>

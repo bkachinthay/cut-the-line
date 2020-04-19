@@ -11,7 +11,7 @@ const actions = ({ setState }) => ({
   setOrder(state, price) {
     const {
       cart,
-      orders,
+      currOrders,
       currVendor: { id: vendorId, name: vendorName },
     } = state;
     const itemCount = sum(Object.values(cart).map(({ count }) => count || 0));
@@ -27,7 +27,7 @@ const actions = ({ setState }) => ({
     pusher.trigger("client-order-placed", { order });
     order.ordersBefore = null;
     order.tokenNo = 0;
-    setState({ cart: {}, orders: [order, ...orders] });
+    setState({ cart: {}, currOrders: [order, ...currOrders] });
     route("/orders");
     // placeOrder(cart)
     //   .then(({ status }) => {

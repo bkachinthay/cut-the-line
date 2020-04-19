@@ -11,9 +11,11 @@ const intialState = {
   vendors: { loading: false, payload: [], error: false },
   menu: { loading: true, payload: [], error: false },
   cart: {},
-  orders: [],
+  pastOrders: [],
+  currOrders: [],
   currVendor: {},
-  queue: [],
+  queue: [], // move to vendor app
+  vendorPastOrders: [], // move to vendor app
   tokenNo: 1,
 };
 

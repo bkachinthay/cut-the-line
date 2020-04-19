@@ -7,6 +7,7 @@ import Menu from "containers/Menu";
 import Cart from "containers/Cart";
 import OrderList from "containers/OrderList";
 import Queue from "containers/Queue";
+import PastOrders from "containers/PastOrders";
 import Error from "components/Error";
 import "tachyons/css/tachyons.css";
 import "./index.css";
@@ -21,7 +22,8 @@ function App() {
           <Menu path="/v/:vendorId" />
           <Cart path="/cart" />
           <OrderList path="/orders" />
-          <Queue path="/queue/:vendorId" />
+          <Queue path="vendor/queue/:vendorId" />
+          <PastOrders path="vendor/orders" />
           <Error type={404} default />
         </Router>
       </div>
