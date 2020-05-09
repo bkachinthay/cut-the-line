@@ -1,33 +1,24 @@
-import { fetchVendors, fetchMenu } from "api";
+import { fetchVendorDetails } from "api";
 import { STATUS_COMPLETE } from "utils/status";
 
-const actions = ({ setState, getState }) => ({
-  getMenu({ vendors = [] }, vendorId) {
+const actions = ({ setState }) => ({
+  getMenu({}, vendorId) {
     setState({
       currVendor: { id: vendorId, name: "" },
       menu: { loading: true, payload: [], error: false },
     });
 
-    const menuPromise = vendors.length
-      ? fetchMenu(vendorId)
-      : fetchVendors().then((payload) => {
-          setState({
-            vendors: { loading: false, payload, error: false },
-          });
-          return fetchMenu(vendorId);
-        });
-
-    return menuPromise
-      .then((payload) => {
-        const { vendors } = getState();
-        const currVendor = vendors.payload.filter((v) => v.id === vendorId)[0];
-        return { currVendor, menu: { loading: false, payload, error: false } };
-      })
+    return fetchVendorDetails(vendorId)
+      .then(({ name, description, id, items }) => ({
+        currVendor: { name, description, id },
+        menu: { loading: false, payload: items, error: false },
+      }))
       .catch((error) => ({
         currVendor: {},
         menu: { loading: false, payload: [], error },
       }));
   },
+
   setOrderStatus({ currOrders, pastOrders }, { orderId, status } = {}) {
     // ignore if updated order is not in users current orders.
     if (currOrders.every((order) => order.orderId !== orderId)) {

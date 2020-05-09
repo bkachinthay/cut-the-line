@@ -1,0 +1,103 @@
+enum UserRole {
+  CUSTOMER
+  VENDOR
+}
+
+type User {
+  username: String! @unique
+  role: UserRole!
+}
+
+input CreateUserInput {
+  username: String!
+  password: String!
+  role: UserRole!
+}
+
+input LoginUserInput {
+  username: String!
+  password: String!
+}
+
+type Item {
+  name: String!
+  price: Int!
+  isVeg: Boolean!
+  vendor: Vendor!
+  orderItems: [OrderItem!] @relation # will this being mandatary create problem while creation.
+}
+
+type Vendor {
+  owner: User!
+  name: String!
+  description: String!
+  items: [Item!]! @relation
+  orders: [Order!] @relation
+}
+
+enum Status {
+  STATUS_WAITING
+  STATUS_PREPARING
+  STATUS_READY
+  STATUS_COMPLETE
+}
+
+type Order {
+  orderBy: User!
+  vendor: Vendor!
+  items: [OrderItem!]! @relation
+  status: Status!
+  tokenNo: Int!
+  creationTime: Time!
+}
+
+input CreateOrderVendorRelation {
+  connect: ID
+}
+
+input CreateOrderOrderItemRelation {
+  create: [CreateOrderItemInput]
+}
+
+input CreateOrderInput {
+  vendor: CreateOrderVendorRelation
+  items: CreateOrderOrderItemRelation
+  status: Status!
+  tokenNo: Int!
+}
+
+type OrderItem {
+  item: Item!
+  count: Int!
+  order: Order!
+}
+
+input CreateOrderItemInput {
+  item: CreateOrderItemItemRelation!
+  count: Int!
+}
+
+input CreateOrderItemItemRelation {
+  connect: ID
+}
+
+input UpdateOrderInput {
+  id: ID!
+  status: Status!
+}
+
+type Query {
+  allVendors: [Vendor!]! @index(name: "all_vendors")
+  allOrders: [Order!]! @index(name: "all_orders")
+  # allCustomers: [Customer!]!
+  selectedVendors(name: String!): [Vendor!]
+  queueOrders: [Order!] @resolver(name: "queue_orders")
+  completedOrders: [Order!]! @resolver(name: "completed_orders")
+}
+
+type Mutation {
+  createUser(input: CreateUserInput): User! @resolver(name: "create_user")
+  loginUser(input: LoginUserInput): String! @resolver(name: "login_user")
+  createOrder(data: CreateOrderInput): Order! @resolver(name: "create_order")
+  updateAOrder(data: UpdateOrderInput): Order! @resolver(name: "update_order")
+}

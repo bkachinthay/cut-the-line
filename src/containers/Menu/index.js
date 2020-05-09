@@ -7,6 +7,8 @@ import actions from "./actions";
 
 function Menu({
   vendorId,
+  vendorName,
+  vendorDescription,
   getMenu,
   setOrderStatus,
   setOrdersBefore,
@@ -28,7 +30,6 @@ function Menu({
       ],
     ]);
   }, [setOrderStatus, setOrdersBefore, setTokenNo, vendorId]);
-  const vendorName = vendorId;
   let itemsList = null;
   if (loading) {
     itemsList = <div class="black-70 tc f4">Loading...</div>;
@@ -44,10 +45,7 @@ function Menu({
     <div class="w-100 pb5">
       <div class="w-100 tc b--dashed b--gray bw1 bl-0 bt-0 br-0 pb4">
         <h2 class="f3 ma0 lh-title">{vendorName}</h2>
-        <p class="f4 ma0 mt3 lh-copy">
-          Menu description some long text to goi wuth the heading shoudl not be
-          too king other wse it will overflow
-        </p>
+        <p class="f4 ma0 mt3 lh-copy">{vendorDescription}</p>
       </div>
       <div class="mw6 center">{itemsList}</div>
       <CartPreview />
@@ -56,6 +54,9 @@ function Menu({
 }
 
 export default connect(
-  ({ menu: { loading, payload, error } }) => ({ loading, payload, error }),
+  ({
+    menu: { loading, payload, error },
+    currVendor: { name: vendorName, description: vendorDescription },
+  }) => ({ loading, payload, error, vendorName, vendorDescription }),
   actions
 )(Menu);

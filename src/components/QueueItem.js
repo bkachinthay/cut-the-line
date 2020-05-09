@@ -1,7 +1,9 @@
+import { useState, useEffect } from "preact/hooks";
 import Token from "./Token";
 import Price from "./Price";
 import OrderDetails from "./OrderDetails";
 import StatusLabel from "./StatusLabel";
+import Spinner from "./Spinner";
 import {
   STATUS_WAITING,
   STATUS_PREPARING,
@@ -34,13 +36,19 @@ function QueueItem({
   tokenNo,
   status = STATUS_WAITING,
 }) {
-  const toggleStatus = (orderId, buttonStatus) =>
+  const [loadingStatus, updateLoadingStatus] = useState(null);
+  const toggleStatus = (orderId, buttonStatus) => {
+    updateLoadingStatus(buttonStatus);
     setStatus(
       orderId,
       buttonStatus === status
         ? STATUS_ORDER[STATUS_ORDER.indexOf(buttonStatus) - 1]
         : buttonStatus
     );
+  };
+  useEffect(() => {
+    updateLoadingStatus(null);
+  }, [status]);
 
   return (
     <div class="b--silver ba br2 pa2 shadow-1">
@@ -75,7 +83,11 @@ function QueueItem({
               }`}
               onClick={() => toggleStatus(orderId, STATUS_PREPARING)}
             >
-              Start
+              {loadingStatus === STATUS_PREPARING ? (
+                <Spinner isSelected={isCovered(status, STATUS_PREPARING)} />
+              ) : (
+                "Start"
+              )}
             </button>
             <button
               class={`flex-auto w-third button-reset fl pv2 tc b pointer ba bw1 b--red bg-transparent z-2 ${
@@ -83,7 +95,11 @@ function QueueItem({
               }`}
               onClick={() => toggleStatus(orderId, STATUS_READY)}
             >
-              Ready
+              {loadingStatus === STATUS_READY ? (
+                <Spinner isSelected={isCovered(status, STATUS_READY)} />
+              ) : (
+                "Ready"
+              )}
             </button>
             <button
               class={`flex-auto w-third button-reset fl pv2 tc b pointer ba bl-0 bw1 b--red br--right br3 bg-transparent z-2 ${
@@ -91,7 +107,11 @@ function QueueItem({
               }`}
               onClick={() => toggleStatus(orderId, STATUS_COMPLETE)}
             >
-              Picked up
+              {loadingStatus === STATUS_COMPLETE ? (
+                <Spinner isSelected={isCovered(status, STATUS_COMPLETE)} />
+              ) : (
+                "Picked up"
+              )}
             </button>
           </div>
         </div>

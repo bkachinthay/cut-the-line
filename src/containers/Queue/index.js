@@ -4,7 +4,10 @@ import QueueItem from "components/QueueItem";
 import vendorPusher from "../../vendorPusher";
 import actions from "./actions";
 
-function Queue({ queue, vendorId, setOrder, setStatus }) {
+function Queue({ queue, vendorId, setOrder, setStatus, getQueueOrders }) {
+  useEffect(() => {
+    getQueueOrders();
+  }, [getQueueOrders]);
   useEffect(() => {
     vendorPusher.init(vendorId, `presence-${vendorId}`, [
       [

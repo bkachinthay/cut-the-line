@@ -22,7 +22,7 @@ function App() {
           <Menu path="/v/:vendorId" />
           <Cart path="/cart" />
           <OrderList path="/orders" />
-          <Queue path="vendor/queue/:vendorId" />
+          <Queue path="/vendor/queue/:vendorId" />
           <PastOrders path="vendor/orders" />
           <Error type={404} default />
         </Router>

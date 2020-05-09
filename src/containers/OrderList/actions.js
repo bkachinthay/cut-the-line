@@ -1,4 +1,6 @@
 import { route } from "preact-router";
+import { fetchOrders } from "api";
+import { STATUS_COMPLETE } from "utils/status";
 
 const actions = ({ setState }) => ({
   reorder({ pastOrders }, orderId) {
@@ -15,6 +17,21 @@ const actions = ({ setState }) => ({
         cart,
       });
       route("/cart");
+    }
+  },
+  getOrders({ currOrders }) {
+    if (!currOrders || currOrders.length === 0) {
+      return fetchOrders()
+        .then((allOrders) =>
+          allOrders.reduce(
+            ({ currOrders, pastOrders }, order) =>
+              order.status === STATUS_COMPLETE
+                ? { currOrders, pastOrders: [order, ...pastOrders] }
+                : { currOrders: [order, ...currOrders], pastOrders },
+            { currOrders: [], pastOrders: [] }
+          )
+        )
+        .catch((error) => console.error("failed to fetch orders", error));
     }
   },
 });

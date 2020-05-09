@@ -1,7 +1,10 @@
+import { useEffect } from "preact/hooks";
 import { connect } from "redux-zero/preact";
 import QueueItem from "components/QueueItem";
+import actions from "./actions";
 
-function PastOrders({ vendorPastOrders }) {
+function PastOrders({ vendorPastOrders, getPastOrders }) {
+  useEffect(() => getPastOrders(), [getPastOrders]);
   return (
     <ul class="list pl0 measure center">
       {vendorPastOrders.length === 0 && (
@@ -34,6 +37,7 @@ function PastOrders({ vendorPastOrders }) {
   );
 }
 
-export default connect(({ vendorPastOrders }) => ({ vendorPastOrders }))(
-  PastOrders
-);
+export default connect(
+  ({ vendorPastOrders }) => ({ vendorPastOrders }),
+  actions
+)(PastOrders);

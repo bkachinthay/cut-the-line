@@ -1,8 +1,10 @@
+import { useEffect } from "preact/hooks";
 import { connect } from "redux-zero/preact";
 import Order from "components/Order";
 import actions from "./actions";
 
-function OrderList({ pastOrders = [], currOrders = [], reorder }) {
+function OrderList({ pastOrders = [], currOrders = [], reorder, getOrders }) {
+  useEffect(() => getOrders(), [getOrders]);
   return (
     <ul class="list pl0 measure center">
       {/* {orders.length === 0 && (

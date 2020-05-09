@@ -1,0 +1,253 @@
+Update(Function("create_order"), {
+  "body": Query(
+    Lambda(
+      ["input"],
+      Let(
+        { orderRef: Select("ref", Create(Collection("Order"), {
+            data: {
+              vendor: Ref(
+                Collection("Vendor"),
+                Select(["vendor", "connect"], Var("input"))
+              ),
+              status: Select("status", Var("input")),
+              tokenNo: Select("tokenNo", Var("input")),
+              creationTime: Time("now"),
+              orderBy: Identity()
+            }
+          })) },
+        Do(
+          Map(
+            Select(["items", "create"], Var("input")),
+            Lambda(
+              ["item"],
+              Create(Collection("OrderItem"), {
+                data: {
+                  item: Ref(
+                    Collection("Item"),
+                    Select(["item", "connect"], Var("item"))
+                  ),
+                  order: Var("orderRef"),
+                  count: Select("count", Var("item"))
+                }
+              })
+            )
+          ),
+		  Get(Var("orderRef"))
+        )
+      )
+    )
+  )
+})
+
+Update(Function("create_user"), {
+  "body": Query(
+    Lambda(["input"],
+      Create(Collection("User"), {
+        data: {
+          username: Select("username", Var("input")),
+          role: Select("role", Var("input")),
+        },
+        credentials: {
+          password: Select("password", Var("input"))
+        }
+      })
+    )
+  )
+})
+
+Update(Function("login_user"), {
+  "body": Query(
+    Lambda(["input"],
+      Select(
+        "secret",
+        Login(
+          Match(Index("unique_User_username"), Select("username", Var("input"))),
+          { password: Select("password", Var("input")) }
+        )
+      )
+    )
+  )
+})
+
+Update(Function("update_order"), {
+  "body": Query(
+    Lambda(["input"],
+      Update(
+        Ref(Collection("Order"), Select("id", Var("input"))),
+        { data: { status: Select("status", Var("input")) } }
+      )
+    )
+  )
+})
+
+Update(Function("completed_orders"), {
+  "body": Query(
+    Lambda([],
+      Select("data", Map(
+        Paginate(Match(Index("queue_orders"), "STATUS_COMPLETE")),
+        Lambda("ref", Get(Var("ref")))
+      ))
+    )
+  )
+})
+
+Update(Function("queue_orders"), {
+  "body": Query(
+    Lambda([],
+      Select("data",
+        Map(
+          Paginate(
+             Difference(
+                Match(Index("all_orders")),
+                Match(Index("queue_orders"), "STATUS_COMPLETE"),
+             )
+          ),
+          Lambda("ref", Get(Var("ref")))
+        )
+      )
+    )
+  )
+})
+
+# rename queue_orders to orders_by_status
+CreateIndex({
+  "name": "queue_orders",
+  "source": Collection("Order"),
+  "terms": [{ field: ["data", "status"] }]
+})
+
+Update(Role("customer_role"), {
+  name: "customer_role",
+  membership: {
+    resource: Collection("User"),
+    predicate: Query(
+      Lambda("userRef",
+        Equals(Select(["data", "role"], Get(Var("userRef"))), "CUSTOMER")
+      )
+    )
+  },
+  privileges: [
+    {
+      resource: Collection("Vendor"),
+      actions: { read: true }
+    },
+    {
+      resource: Index("all_vendors"),
+      actions: { read: true }
+    },
+    {
+      resource: Collection("Item"),
+      actions: { read: true }
+    },
+    {
+      resource: Index("item_orderItems_by_item"),
+      actions: { read: true }
+    },
+    {
+      resource: Index("item_vendor_by_vendor"),
+      actions: { read: true }
+    },
+    {
+      resource: Index("all_orders"),
+      actions: { read: true }  
+    },
+    {
+      resource: Collection("Order"),
+      actions: {
+        read: Query(
+          Lambda("fileRef", Equals(Select(["data", "orderBy"], Get(Var("fileRef"))), Identity()))
+        ),
+        create: true
+      }
+    },
+    {
+      resource: Index("order_vendor_by_vendor"),
+      actions: { read: true }
+    },
+    {
+      resource: Index("orderItem_order_by_order"),
+      actions: { read: true }
+    },
+    {
+      resource: Collection("OrderItem"),
+      actions: { read: true, create: true }
+    },
+    {
+      resource: Function("create_order"),
+      actions: { call: true }
+    }
+  ]
+})
+
+Update(Role("vendor_role"), {
+  name: "vendor_role",
+  membership: {
+    resource: Collection("User"),
+    predicate: Query(
+      Lambda("userRef",
+        Equals(Select(["data", "role"], Get(Var("userRef"))), "VENDOR")
+      )
+    )
+  },
+  privileges: [
+    {
+      resource: Collection("Vendor"),
+      actions: { read: true }
+    },
+    {
+      resource: Index("all_vendors"),
+      actions: { read: true }
+    },
+    {
+      resource: Collection("Order"),
+      actions: {
+        read: Query(
+          Lambda(["orderRef"], Equals(Select(["data", "owner"], Get(Select(["data", "vendor"], Get(Var("orderRef"))))), Identity()))
+        ),
+        write:  Query(
+          Lambda(["prevOrderRef", "nextOrderRef"], Equals(Select(["data", "owner"], Get(Select(["data", "vendor"], Var("prevOrderRef")))), Identity()))
+        )
+      }
+    },
+    {
+      resource: Index("all_orders"),
+      actions: { read: true }
+    },
+    {
+      resource: Index("orderItem_order_by_order"),
+      actions: { read: true }
+    },
+    {
+      resource: Collection("OrderItem"),
+      actions: { read: true, create: true }
+    },
+    {
+      resource: Collection("Item"),
+      actions: { read: true }
+    },
+    {
+      resource: Collection("User"),
+      actions: { read: true }
+    },
+    {
+      resource: Index("item_orderItems_by_item"),
+      actions: { read: true }
+    },
+    {
+      resource: Index("queue_orders"),
+      actions: { read: true }
+    },
+    {
+      resource: Function("update_order"),
+      actions: { call: true }
+    },
+    {
+      resource: Function("queue_orders"),
+      actions: { call: true }
+    },
+    {
+      resource: Function("completed_orders"),
+      actions: { call: true }
+    }
+  ]
+})

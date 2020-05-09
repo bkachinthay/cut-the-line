@@ -3,4 +3,7 @@ export default {
   apiHost: "",
   pusherKey: "",
   pusherCluster: "",
+  gqlURL: "",
+  customerAuth: "",
+  vendorAuth: "",
 };
