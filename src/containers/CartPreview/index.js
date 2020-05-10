@@ -1,5 +1,7 @@
 import { connect } from "redux-zero/preact";
+import { Text } from "preact-i18n";
 import { Link } from "preact-router/match";
+import ItemCount from "components/ItemCount";
 import Price from "components/Price";
 import sum from "utils/sum";
 
@@ -14,9 +16,11 @@ function CartPreview({ price, itemCount }) {
         class="db no-underline center bg-red white mw6 pv3 ph3 ph4-ns flex justify-between pointer f5 fw6"
       >
         <span class="lh-copy">
-          {`${itemCount} Items`} | <Price value={price} />
+          <ItemCount count={itemCount} /> | <Price value={price} />
         </span>
-        <span class="lh-copy ttu">View Cart</span>
+        <span class="lh-copy ttu">
+          <Text id="cartPreview.viewCart">View Cart</Text>
+        </span>
       </Link>
     </div>
   );

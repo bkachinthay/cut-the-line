@@ -1,5 +1,7 @@
 import { STATUS_COMPLETE } from "utils/status";
+import { Text } from "preact-i18n";
 import Token from "./Token";
+import ItemCount from "./ItemCount";
 import Price from "./Price";
 import OrderDetails from "./OrderDetails";
 import Accordian from "./Accordian";
@@ -28,7 +30,7 @@ function Order({
             <StatusLabel classes="fr" value={status} />
           </h2>
           <h3 class="ma0 f5 lh-title black-80">
-            {itemCount} Items | <Price value={price} />
+            <ItemCount count={itemCount} /> | <Price value={price} />
           </h3>
           <p class="ma0 mt2 lh-copy f5">
             <StatusMessage value={status} ordersBefore={ordersBefore} />{" "}
@@ -37,7 +39,7 @@ function Order({
                 class="fr button-reset pv2 ph3 ba bw1 b--dark-red bg-white dark-red f5 fw5 grow pointer ttu"
                 onClick={() => reorder(orderId)}
               >
-                Reorder
+                <Text id="order.reorder">Reorder</Text>
               </button>
             ) : null}
           </p>

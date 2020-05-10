@@ -1,4 +1,5 @@
 import { connect } from "redux-zero/preact";
+import { Text } from "preact-i18n";
 import Counter from "components/Counter";
 import { VegIcon } from "components/Icons";
 import Price from "components/Price";
@@ -37,21 +38,23 @@ function Cart({ cart, vendorName, setItemCount, setOrder }) {
         </ul>
       </div>
       <div class="">
-        <h2 class="f3 lh-title ma0 mt2">Bill Details</h2>
+        <h2 class="f3 lh-title ma0 mt2">
+          <Text id="cart.billDetails">Bill Details</Text>
+        </h2>
         <div class="bb b--black-20 mt3">
-          Item Total
+          <Text id="cart.itemTotal">Item Total</Text>
           <span class="fr">
             <Price value={total} />
           </span>
         </div>
         <div class="bb b--black-20 mt3">
-          Taxes and Charges
+          <Text id="cart.taxesAndCharges">Taxes and Charges</Text>
           <span class="fr">
             <Price value={0} />
           </span>
         </div>
         <div class="bb b--black-20 mt3 b">
-          To Pay
+          <Text id="cart.toPay">To Pay</Text>
           <span class="fr">
             <Price value={total} />
           </span>
@@ -61,7 +64,9 @@ function Cart({ cart, vendorName, setItemCount, setOrder }) {
             class="dib no-underline ba b--red bg-red grow white f3 pv2 pa3 pointer"
             onClick={() => setOrder(total)}
           >
-            Pay <Price value={total} />
+            <Text id="cart.pay" fields={{ amount: total || 0 }}>
+              Pay <Price value={total} />
+            </Text>
           </a>
         </div>
       </div>

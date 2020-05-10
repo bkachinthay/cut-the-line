@@ -1,5 +1,7 @@
 import { useState, useEffect } from "preact/hooks";
+import { Text, MarkupText } from "preact-i18n";
 import Token from "./Token";
+import ItemCount from "./ItemCount";
 import Price from "./Price";
 import OrderDetails from "./OrderDetails";
 import StatusLabel from "./StatusLabel";
@@ -56,11 +58,13 @@ function QueueItem({
         {tokenNo ? <Token value={tokenNo} /> : null}
         <div class="ml2 flex-auto">
           <h2 class="ma0 f4 lh-title">
-            <span>Order by {customerName}</span>
+            <MarkupText id="queueItem.orderBy" fields={{ name: customerName }}>
+              Order by <span class="ttc">{customerName}</span>
+            </MarkupText>
             <StatusLabel classes="fr" value={status} />
           </h2>
           <h3 class="ma0 f5 lh-title black-80">
-            {itemCount} Items | <Price value={price} />
+            <ItemCount count={itemCount} /> | <Price value={price} />
           </h3>
           {/* <p class="ma0 mt2 lh-copy f5">
             <button
@@ -86,7 +90,7 @@ function QueueItem({
               {loadingStatus === STATUS_PREPARING ? (
                 <Spinner isSelected={isCovered(status, STATUS_PREPARING)} />
               ) : (
-                "Start"
+                <Text id="queueItem.start">Start</Text>
               )}
             </button>
             <button
@@ -98,7 +102,7 @@ function QueueItem({
               {loadingStatus === STATUS_READY ? (
                 <Spinner isSelected={isCovered(status, STATUS_READY)} />
               ) : (
-                "Ready"
+                <Text id="queueItem.ready">Ready</Text>
               )}
             </button>
             <button
@@ -110,7 +114,7 @@ function QueueItem({
               {loadingStatus === STATUS_COMPLETE ? (
                 <Spinner isSelected={isCovered(status, STATUS_COMPLETE)} />
               ) : (
-                "Picked up"
+                <Text id="queueItem.pickedUp">Picked Up</Text>
               )}
             </button>
           </div>

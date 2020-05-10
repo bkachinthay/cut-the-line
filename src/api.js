@@ -130,6 +130,7 @@ export function fetchOrders() {
           (acc, { count, item: { price } }) => acc + count * price,
           0
         ), // get from db
+        itemCount: sum(orderItems.map(({ count }) => count || 0)),
         items: orderItems.map(({ count, item }) => ({
           id: item._id,
           name: item.name,

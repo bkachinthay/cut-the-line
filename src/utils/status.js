@@ -1,3 +1,4 @@
+import { Text } from "preact-i18n";
 // Waiting :- This order is yet to be started on. There are {n} orders before you.
 // In Progress(Preparing) :- This order is being prepared.
 // Ready :- This order is ready to be Picked up. | Please pick up your order.
@@ -20,17 +21,29 @@ export function isStatus(value) {
 }
 
 export const STATUS_MESSAGE = {
-  STATUS_WAITING: "This order is yet to be started on.",
-  STATUS_PREPARING: "This order is being prepared.",
-  STATUS_READY: "This order is ready. Please pick it up.",
-  STATUS_COMPLETE: "This order is picked up.",
+  STATUS_WAITING: (
+    <Text id="status.messages.waiting">
+      This order is yet to be started on.
+    </Text>
+  ),
+  STATUS_PREPARING: (
+    <Text id="status.messages.preparing">This order is being prepared.</Text>
+  ),
+  STATUS_READY: (
+    <Text id="status.messages.ready">
+      This order is ready. Please pick it up.
+    </Text>
+  ),
+  STATUS_COMPLETE: (
+    <Text id="status.messages.completed">This order is picked up.</Text>
+  ),
 };
 
 export const STATUS_TEXT = {
-  STATUS_WAITING: "Waiting",
-  STATUS_PREPARING: "Preparing",
-  STATUS_READY: "Ready",
-  STATUS_COMPLETE: "Completed",
+  STATUS_WAITING: <Text id="status.text.waiting">Waiting</Text>,
+  STATUS_PREPARING: <Text id="status.text.preparing">Preparing</Text>,
+  STATUS_READY: <Text id="status.text.ready">Ready</Text>,
+  STATUS_COMPLETE: <Text id="status.text.completed">Completed</Text>,
 };
 
 export const STATUS_CLASSES = {

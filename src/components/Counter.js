@@ -1,4 +1,5 @@
 import { Fragment } from "preact";
+import { Text } from "preact-i18n";
 
 function Counter({ cnt = 0, setCount }) {
   return (
@@ -8,7 +9,7 @@ function Counter({ cnt = 0, setCount }) {
           class="w-100 pointer button-reset bn b bg-red white grow ttu"
           onclick={() => setCount(1)}
         >
-          Add
+          <Text id="counter.add">Add</Text>
         </button>
       ) : (
         <Fragment>

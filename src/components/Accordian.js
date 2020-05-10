@@ -1,12 +1,7 @@
 import { useState } from "preact/hooks";
+import { Text } from "preact-i18n";
 
-function Accordian({
-  children = null,
-  collapsedLabel = "Show more",
-  expandedLabel = "Show less",
-  classes = "",
-  style = {}
-}) {
+function Accordian({ children = null, classes = "", style = {} }) {
   const [expanded, toggleExpanded] = useState(false);
   return (
     <div class={classes} style={{ ...style }}>
@@ -15,7 +10,11 @@ function Accordian({
         class="mt2 db ttu b no-underline red pointer"
         onClick={() => toggleExpanded(!expanded)}
       >
-        {expanded ? expandedLabel : collapsedLabel}
+        {expanded ? (
+          <Text id="accordian.expanded">Show less</Text>
+        ) : (
+          <Text id="accordian.collapsed">Show more</Text>
+        )}
       </a>
     </div>
   );

@@ -37,6 +37,7 @@
     "graphql.js": "^0.6.1",
     "netlify-lambda": "^1.6.3",
     "preact": "^10.4.0",
+    "preact-i18n": "^2.0.0-preactx.2",
     "preact-render-to-string": "^5.1.4",
     "preact-router": "^3.2.1",
     "pusher": "^3.0.1",

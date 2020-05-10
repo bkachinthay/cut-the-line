@@ -11,11 +11,9 @@ const actions = ({ setState }) => ({
   setOrder(state, price) {
     const {
       cart,
-      currOrders,
       currVendor: { id: vendorId, name: vendorName },
     } = state;
-    const items = Object.values(cart);
-    // only pass necessary value to api: vendorId items { id count }
+    const items = Object.values(cart).filter(({ count }) => count !== 0);
     return placeOrder({ vendorId, items })
       .then(({ orderId, tokenNo, status }) => {
         const itemCount = sum(items.map(({ count }) => count || 0));
@@ -31,7 +29,7 @@ const actions = ({ setState }) => ({
         };
         pusher.trigger("client-order-placed", { order });
         order.ordersBefore = null;
-        setState({ cart: {}, currOrders: [order, ...currOrders] });
+        setState({ cart: {} });
         route("/orders");
       })
       .catch(() => console.log("could not place order"));

@@ -25,7 +25,7 @@ function Header({ vendorId }) {
       {({ path }) => {
         const [backUrl, heading] = backURL(path, vendorId);
         return (
-          <h1 class="mv0 w-100 bg-red white f3 fw3 pa2 lh-title flex items-center fixed top-0 mw7 z-2">
+          <h1 class="mv0 w-100 bg-red white f3 fw3 pa2 lh-title flex items-center fixed top-0 mw7 z-3">
             {backUrl && (
               <a
                 class="w2 h2 mr3 pointer no-underline"

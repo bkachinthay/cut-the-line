@@ -24,19 +24,11 @@ function Queue({ queue, vendorId, setOrder, setStatus, getQueueOrders }) {
         <li class="black-70 tc f4">{"No active Orders"}</li>
       )}
       {queue.map(
-        ({
-          orderId,
-          customerName,
-          itemCount,
-          price,
-          items,
-          status,
-          tokenNo,
-        }) => (
+        ({ orderId, customerId, itemCount, price, items, status, tokenNo }) => (
           <li key={orderId} class="mv3">
             <QueueItem
               orderId={orderId}
-              customerName={customerName}
+              customerName={customerId}
               itemCount={itemCount}
               price={price}
               items={items}
