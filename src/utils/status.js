@@ -1,4 +1,4 @@
-import { Text } from "preact-i18n";
+import { Text } from "utils/intl";
 // Waiting :- This order is yet to be started on. There are {n} orders before you.
 // In Progress(Preparing) :- This order is being prepared.
 // Ready :- This order is ready to be Picked up. | Please pick up your order.

@@ -1,5 +1,5 @@
 import { useState } from "preact/hooks";
-import { Text } from "preact-i18n";
+import { Text } from "utils/intl";
 
 function Accordian({ children = null, classes = "", style = {} }) {
   const [expanded, toggleExpanded] = useState(false);

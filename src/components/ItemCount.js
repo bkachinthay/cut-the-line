@@ -1,4 +1,4 @@
-import { Text } from "preact-i18n";
+import { Text } from "utils/intl";
 
 function ItemCount({ count }) {
   return (

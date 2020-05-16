@@ -1,7 +1,5 @@
 import Router from "preact-router";
 import { Provider } from "redux-zero/preact";
-import { IntlProvider } from "preact-i18n";
-import store from "./store";
 import Header from "containers/Header";
 import Home from "containers/Home";
 import Menu from "containers/Menu";
@@ -12,6 +10,8 @@ import PastOrders from "containers/PastOrders";
 import Error from "components/Error";
 import "tachyons/css/tachyons.css";
 import "./index.css";
+import store from "./store";
+import IntlWrapper from "./IntlWrapper";
 
 const englishDefinition = {
   search: {
@@ -134,7 +134,7 @@ const hindiDefinition = {
 function App() {
   return (
     <Provider store={store}>
-      <IntlProvider definition={hindiDefinition}>
+      <IntlWrapper value={hindiDefinition}>
         <div class="sans-serif mw7 center bg-white black pt5">
           <Header />
           <Router>
@@ -147,7 +147,7 @@ function App() {
             <Error type={404} default />
           </Router>
         </div>
-      </IntlProvider>
+      </IntlWrapper>
     </Provider>
   );
 }

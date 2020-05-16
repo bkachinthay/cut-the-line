@@ -1,6 +1,6 @@
 import { useEffect } from "preact/hooks";
 import { connect } from "redux-zero/preact";
-import { Text, Localizer } from "preact-i18n";
+import { Text, Localizer } from "utils/intl";
 import { route } from "preact-router";
 import qs from "query-string";
 import Search from "components/Search";

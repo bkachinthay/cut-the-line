@@ -9,6 +9,7 @@ const logger = (store) => (next, args) => (action) => {
 
 const intialState = {
   vendors: { loading: false, payload: [], error: false },
+  intl: { hindi: {}, english: {} },
   menu: { loading: true, payload: [], error: false },
   cart: {},
   pastOrders: [],

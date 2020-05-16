@@ -1,5 +1,5 @@
 import { Fragment } from "preact";
-import { Text } from "preact-i18n";
+import { Text } from "utils/intl";
 
 function Counter({ cnt = 0, setCount }) {
   return (

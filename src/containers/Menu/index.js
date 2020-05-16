@@ -1,5 +1,6 @@
 import { useEffect } from "preact/hooks";
 import { connect } from "redux-zero/preact";
+import { Text } from "utils/intl";
 import ItemCard from "containers/ItemCard";
 import CartPreview from "containers/CartPreview";
 import pusher from "../../pusher";
@@ -44,8 +45,12 @@ function Menu({
   return (
     <div class="w-100 pb5">
       <div class="w-100 tc b--dashed b--gray bw1 bl-0 bt-0 br-0 pb4">
-        <h2 class="f3 ma0 lh-title">{vendorName}</h2>
-        <p class="f4 ma0 mt3 lh-copy">{vendorDescription}</p>
+        <h2 class="f3 ma0 lh-title">
+          <Text id="vendorIntl.name">{vendorName}</Text>
+        </h2>
+        <p class="f4 ma0 mt3 lh-copy">
+          <Text id="vendorIntl.description">{vendorDescription}</Text>
+        </p>
       </div>
       <div class="mw6 center">{itemsList}</div>
       <CartPreview />

@@ -1,5 +1,5 @@
 import zpad from "utils/zpad";
-import { Text } from "preact-i18n";
+import { Text } from "utils/intl";
 
 function Token({ value = 0 }) {
   return (

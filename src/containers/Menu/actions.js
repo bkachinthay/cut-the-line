@@ -1,4 +1,4 @@
-import { fetchVendorDetails } from "api";
+import { fetchVendorDetails, fetchIntl } from "api";
 import { STATUS_COMPLETE } from "utils/status";
 
 const actions = ({ setState }) => ({
@@ -7,6 +7,10 @@ const actions = ({ setState }) => ({
       currVendor: { id: vendorId, name: "" },
       menu: { loading: true, payload: [], error: false },
     });
+
+    fetchIntl(vendorId)
+      .then((intl) => setState({ intl }))
+      .catch((err) => console.error("vendor intl fetch err : ", err));
 
     return fetchVendorDetails(vendorId)
       .then(({ name, description, id, items }) => ({

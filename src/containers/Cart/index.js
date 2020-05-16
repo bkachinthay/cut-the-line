@@ -1,5 +1,5 @@
 import { connect } from "redux-zero/preact";
-import { Text } from "preact-i18n";
+import { Text } from "utils/intl";
 import Counter from "components/Counter";
 import { VegIcon } from "components/Icons";
 import Price from "components/Price";
@@ -11,7 +11,9 @@ function Cart({ cart, vendorName, setItemCount, setOrder }) {
   return (
     <div class="w-100 measure center">
       <div class="w-100 b--dotted b--gray bw1 bl-0 bt-0 br-0 pb2">
-        <h2 class="f3 ma0 lh-title">{vendorName}</h2>
+        <h2 class="f3 ma0 lh-title">
+          <Text id={"vendorIntl.name"}>{vendorName}</Text>
+        </h2>
         <ul class="list pl0 mt3">
           {cart.map(({ id, name, price, isVeg, count }) => (
             <li class="flex items-start lh-copy mb3" key={id}>
@@ -23,7 +25,11 @@ function Cart({ cart, vendorName, setItemCount, setOrder }) {
                   }}
                 />
               </div>
-              <span class="db pl2 flex-auto">{name}</span>
+              <span class="db pl2 flex-auto">
+                <Text id={`vendorIntl.${name.replace(/\s/g, "_")}`}>
+                  {name}
+                </Text>
+              </span>
               <div class="flex-none">
                 <Counter
                   cnt={count}

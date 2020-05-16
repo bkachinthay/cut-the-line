@@ -175,7 +175,20 @@ Update(Role("customer_role"), {
     {
       resource: Function("create_order"),
       actions: { call: true }
+    },
+    {
+      resource: Function("vendor_intl"),
+      actions: { call: true }
+    },
+    {
+      resource: Index("intl_by_vendor"),
+      actions: { read: true }
+    },
+    {
+      resource: Collection("Intl"),
+      actions: { read: true }
     }
+
   ]
 })
 
@@ -248,6 +261,40 @@ Update(Role("vendor_role"), {
     {
       resource: Function("completed_orders"),
       actions: { call: true }
+    },
+    {
+      resource: Function("vendor_intl"),
+      actions: { call: true }
+    },
+    {
+      resource: Index("intl_by_vendor"),
+      actions: { read: true }
+    },
+    {
+      resource: Collection("Intl"),
+      actions: { read: true }
     }
   ]
+})
+
+CreateIndex({
+  "name": "intl_by_vendor",
+  "source": Collection("Intl"),
+  "terms": [{ field: ["data", "vendor"] }]
+})
+
+Update(Function("vendor_intl"), {
+  "body": Query(
+    Lambda(["vendorId"],
+      Select("data", Map(
+        Paginate(
+          Match(
+            Index("intl_by_vendor"),
+            Ref(Collection("Vendor"), Var("vendorId"))
+          )
+        ),
+        Lambda('x', Get(Var('x')))
+      ))
+    )
+  )
 })

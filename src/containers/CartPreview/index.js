@@ -1,5 +1,5 @@
 import { connect } from "redux-zero/preact";
-import { Text } from "preact-i18n";
+import { Text } from "utils/intl";
 import { Link } from "preact-router/match";
 import ItemCount from "components/ItemCount";
 import Price from "components/Price";

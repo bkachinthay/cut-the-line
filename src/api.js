@@ -143,6 +143,30 @@ export function fetchOrders() {
   );
 }
 
+const intlQuery = gql(`query ($vendorId: ID!) {
+  vendorIntl(vendorId: $vendorId) {
+    key
+    english
+    hindi
+  }
+}
+`);
+
+export function fetchIntl(vendorId) {
+  return intlQuery({ vendorId }).then(({ vendorIntl = [] }) =>
+    vendorIntl.reduce(
+      (
+        { hindi, english },
+        { key, hindi: hindiDefn, english: englishDefn }
+      ) => ({
+        hindi: { ...hindi, [key]: hindiDefn },
+        english: { ...english, [key]: englishDefn },
+      }),
+      { hindi: {}, english: {} }
+    )
+  );
+}
+
 const gqlvendor = graphql(config.gqlURL, {
   alwaysAutodeclare: true,
   asJSON: true,

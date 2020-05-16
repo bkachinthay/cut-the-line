@@ -1,5 +1,5 @@
 import { useState, useEffect } from "preact/hooks";
-import { Text, MarkupText } from "preact-i18n";
+import { Text, MarkupText } from "utils/intl";
 import Token from "./Token";
 import ItemCount from "./ItemCount";
 import Price from "./Price";

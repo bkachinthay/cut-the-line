@@ -1,6 +1,6 @@
 import { isStatus, STATUS_MESSAGE, STATUS_WAITING } from "utils/status";
 import { Fragment } from "preact";
-import { Text } from "preact-i18n";
+import { Text } from "utils/intl";
 
 function StatusMessage({ value, ordersBefore }) {
   const status = isStatus(value) ? value : STATUS_WAITING;

@@ -1,5 +1,5 @@
 import { STATUS_COMPLETE } from "utils/status";
-import { Text } from "preact-i18n";
+import { Text } from "utils/intl";
 import Token from "./Token";
 import ItemCount from "./ItemCount";
 import Price from "./Price";

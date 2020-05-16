@@ -33,6 +33,7 @@ type Vendor {
   description: String!
   items: [Item!]! @relation
   orders: [Order!] @relation
+  intl: [Intl!]! @relation
 }
 
 enum Status {
@@ -86,6 +87,13 @@ input UpdateOrderInput {
   status: Status!
 }
 
+type Intl {
+  vendor: Vendor!
+  key: String!
+  english: String
+  hindi: String
+}
+
 type Query {
   allVendors: [Vendor!]! @index(name: "all_vendors")
   allOrders: [Order!]! @index(name: "all_orders")
@@ -93,6 +101,7 @@ type Query {
   selectedVendors(name: String!): [Vendor!]
   queueOrders: [Order!] @resolver(name: "queue_orders")
   completedOrders: [Order!]! @resolver(name: "completed_orders")
+  vendorIntl(vendorId: ID!): [Intl!]! @resolver(name: "vendor_intl")
 }
 
 type Mutation {
