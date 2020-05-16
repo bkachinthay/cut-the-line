@@ -25,12 +25,16 @@ function Dropdown({ align, links = [] }) {
         }`}
         style={{ top: "50%", ...alignStyle }}
       >
-        {links.map(({ link, label }) => (
+        {links.map(({ link, label, callback }) => (
           <li
             role="button"
             onClick={() => {
               setShowContent(false);
-              route(link);
+              if (link) {
+                route(link);
+              } else if (typeof callback === "function") {
+                callback();
+              }
             }}
             class="db hover-bg-black-10 fn black pointer f4 pa3 tl"
           >

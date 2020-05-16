@@ -26,7 +26,9 @@ function Order({
         {tokenNo ? <Token value={tokenNo} /> : null}
         <div class="ml2 flex-auto">
           <h2 class="ma0 f4 lh-title">
-            <span>{vendorName}</span>
+            <span>
+              <Text id={"vendorIntl.name"}>{vendorName}</Text>
+            </span>
             <StatusLabel classes="fr" value={status} />
           </h2>
           <h3 class="ma0 f5 lh-title black-80">

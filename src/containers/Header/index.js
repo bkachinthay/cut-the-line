@@ -3,6 +3,7 @@ import { route } from "preact-router";
 import Match from "preact-router/match";
 import { BackIcon } from "components/Icons";
 import Dropdown from "components/Dropdown";
+import actions from "./actions";
 
 // "home" -> "menu" -> "cart" -> "orders"
 
@@ -19,7 +20,11 @@ function backURL(currPath, vendorId) {
   return ["/", ""];
 }
 
-function Header({ vendorId }) {
+function Header({ vendorId, setLanguage, language }) {
+  const langaugeItem =
+    language == "hindi"
+      ? { label: "In English", callback: () => setLanguage("english") }
+      : { label: "हिन्दी में", callback: () => setLanguage("hindi") };
   return (
     <Match path="/">
       {({ path }) => {
@@ -37,7 +42,10 @@ function Header({ vendorId }) {
             <span class="flex-auto">{heading}</span>
             <Dropdown
               align="left"
-              links={[{ link: "/vendor/orders", label: "Completed Orders" }]}
+              links={[
+                { link: "/vendor/orders", label: "Completed Orders" },
+                langaugeItem,
+              ]}
             />
           </h1>
         );
@@ -46,6 +54,10 @@ function Header({ vendorId }) {
   );
 }
 
-export default connect(({ currVendor: { id: vendorId } } = {}) => ({
-  vendorId,
-}))(Header);
+export default connect(
+  ({ currVendor: { id: vendorId }, language } = {}) => ({
+    vendorId,
+    language,
+  }),
+  actions
+)(Header);
