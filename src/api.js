@@ -96,6 +96,7 @@ const allOrders = gql(`query {
       _id
       status
       tokenNo
+      creationTime
       vendor {
         _id
         name
@@ -120,10 +121,18 @@ export function fetchOrders() {
   // add price to schema
   return allOrders({}).then(({ allOrders: { data } }) =>
     data.map(
-      ({ _id, status, tokenNo, vendor, items: { data: orderItems } }) => ({
+      ({
+        _id,
+        status,
+        tokenNo,
+        creationTime,
+        vendor,
+        items: { data: orderItems },
+      }) => ({
         orderId: _id,
         status,
         tokenNo,
+        creationTime,
         vendorName: vendor.name,
         vendorId: vendor._id,
         price: orderItems.reduce(
@@ -184,6 +193,7 @@ const vendorQueueOrders = gqlvendor(`query {
     _id
     status
     tokenNo
+    creationTime
     orderBy {
       username
     }
@@ -214,6 +224,7 @@ export function fetchVendorQueueOrders() {
         _id,
         status,
         tokenNo,
+        creationTime,
         orderBy: { username },
         vendor,
         items: { data: orderItems },
@@ -221,6 +232,7 @@ export function fetchVendorQueueOrders() {
         orderId: _id,
         status,
         tokenNo,
+        creationTime,
         customerId: username,
         vendorName: vendor.name,
         vendorId: vendor._id,
@@ -246,6 +258,7 @@ const vendorCompletedOrders = gqlvendor(`query {
     _id
     status
     tokenNo
+    creationTime
     orderBy {
       username
     }
@@ -276,6 +289,7 @@ export function fetchVendorCompletedOrders() {
         _id,
         status,
         tokenNo,
+        creationTime,
         orderBy: { username },
         vendor,
         items: { data: orderItems },
@@ -283,6 +297,7 @@ export function fetchVendorCompletedOrders() {
         orderId: _id,
         status,
         tokenNo,
+        creationTime,
         customerId: username,
         vendorName: vendor.name,
         vendorId: vendor._id,

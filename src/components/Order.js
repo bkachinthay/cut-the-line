@@ -1,5 +1,6 @@
 import { STATUS_COMPLETE } from "utils/status";
 import { Text } from "utils/intl";
+import formatDate from "utils/formatDate";
 import Token from "./Token";
 import ItemCount from "./ItemCount";
 import Price from "./Price";
@@ -19,6 +20,7 @@ function Order({
   items,
   tokenNo,
   reorder,
+  creationTime,
 }) {
   return (
     <div class="b--silver ba br2 pa2 shadow-1">
@@ -34,6 +36,9 @@ function Order({
           <h3 class="ma0 f5 lh-title black-80">
             <ItemCount count={itemCount} /> | <Price value={price} />
           </h3>
+          <h5 class="ma0 mt1 lh-title f6 silver">
+            <date>{formatDate(creationTime)}</date>
+          </h5>
           <p class="ma0 mt2 lh-copy f5">
             <StatusMessage value={status} ordersBefore={ordersBefore} />{" "}
             {status === STATUS_COMPLETE ? (

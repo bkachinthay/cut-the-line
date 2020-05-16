@@ -6,14 +6,16 @@ function StatusMessage({ value, ordersBefore }) {
   const status = isStatus(value) ? value : STATUS_WAITING;
   return (
     <Fragment>
-      <p>{STATUS_MESSAGE[status]}</p>
+      {STATUS_MESSAGE[status]}
       {status === STATUS_WAITING && typeof ordersBefore === "number" ? (
         <Text id="statusMessage.ordersBefore" fields={{ count: ordersBefore }}>
           {`There ${
             ordersBefore === 1 ? "is 1 order" : `are ${ordersBefore} orders`
           } before this.`}
         </Text>
-      ) : null}
+      ) : (
+        ""
+      )}
     </Fragment>
   );
 }

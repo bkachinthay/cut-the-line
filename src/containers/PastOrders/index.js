@@ -19,6 +19,7 @@ function PastOrders({ vendorPastOrders, getPastOrders }) {
           items,
           status,
           tokenNo,
+          creationTime,
         }) => (
           <li key={orderId} class="mv3">
             <QueueItem
@@ -29,6 +30,7 @@ function PastOrders({ vendorPastOrders, getPastOrders }) {
               items={items}
               status={status}
               tokenNo={tokenNo}
+              creationTime={creationTime}
             />
           </li>
         )

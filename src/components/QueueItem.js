@@ -1,5 +1,6 @@
 import { useState, useEffect } from "preact/hooks";
 import { Text, MarkupText } from "utils/intl";
+import formatDate from "utils/formatDate";
 import Token from "./Token";
 import ItemCount from "./ItemCount";
 import Price from "./Price";
@@ -36,6 +37,7 @@ function QueueItem({
   items,
   setStatus,
   tokenNo,
+  creationTime,
   status = STATUS_WAITING,
 }) {
   const [loadingStatus, updateLoadingStatus] = useState(null);
@@ -66,6 +68,9 @@ function QueueItem({
           <h3 class="ma0 f5 lh-title black-80">
             <ItemCount count={itemCount} /> | <Price value={price} />
           </h3>
+          <h5 class="ma0 mt1 lh-title f6 silver">
+            <date>{formatDate(creationTime)}</date>
+          </h5>
           {/* <p class="ma0 mt2 lh-copy f5">
             <button
               class={`button-reset pv2 ph3 ba bw1 b--dark-red bg-white dark-red f5 fw5 grow pointer ttu fr`}

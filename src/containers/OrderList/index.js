@@ -21,6 +21,7 @@ function OrderList({ pastOrders = [], currOrders = [], reorder, getOrders }) {
           ordersBefore,
           items,
           tokenNo,
+          creationTime,
         }) => (
           <li key={orderId} class="mv3">
             <Order
@@ -34,6 +35,7 @@ function OrderList({ pastOrders = [], currOrders = [], reorder, getOrders }) {
               items={items}
               tokenNo={tokenNo}
               reorder={reorder}
+              creationTime={creationTime}
             />
           </li>
         )
