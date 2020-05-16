@@ -10,7 +10,13 @@ Update(Function("create_order"), {
                 Select(["vendor", "connect"], Var("input"))
               ),
               status: Select("status", Var("input")),
-              tokenNo: Select("tokenNo", Var("input")),
+              tokenNo: Call(
+                Function("generate_token_no"),
+                Ref(
+                  Collection("Vendor"),
+                  Select(["vendor", "connect"], Var("input"))
+                )
+              ),
               creationTime: Time("now"),
               orderBy: Identity()
             }
@@ -79,6 +85,30 @@ Update(Function("update_order"), {
     )
   )
 })
+
+# generate_token_no 
+CreateFunction({"name": "generate_token_no",
+"body": Query(
+  Lambda(["vendorRef"],
+    Let({
+      tokenRef: Select(["data", "token"], Get(Var("vendorRef")))
+      },
+      Do(
+        Let(
+          { tokenValue: Select(["data", "value"], Get(Var("tokenRef"))) },
+          Update(
+            Var("tokenRef"),
+            { data: {
+                value: If(GTE(Var("tokenValue"), 100), 1, Add(Var("tokenValue"), 1))
+              }
+            }
+          )
+        ),
+        Select(["data", "value"], Get(Var("tokenRef")))
+      )
+    )
+  )
+)})
 
 Update(Function("completed_orders"), {
   "body": Query(
@@ -187,8 +217,15 @@ Update(Role("customer_role"), {
     {
       resource: Collection("Intl"),
       actions: { read: true }
-    }
-
+    },
+    {
+      resource: Function("generate_token_no"),
+      actions: { call: true }
+    },
+    {
+      resource: Collection("Token"),
+      actions: { read: true, write: true }
+    },
   ]
 })
 

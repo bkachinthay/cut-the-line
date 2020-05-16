@@ -27,10 +27,16 @@ type Item {
   orderItems: [OrderItem!] @relation # will this being mandatary create problem while creation.
 }
 
+type Token {
+  vendor: Vendor!
+  value: Int!
+}
+
 type Vendor {
   owner: User!
   name: String!
   description: String!
+  token: Token!
   items: [Item!]! @relation
   orders: [Order!] @relation
   intl: [Intl!]! @relation
@@ -64,7 +70,6 @@ input CreateOrderInput {
   vendor: CreateOrderVendorRelation
   items: CreateOrderOrderItemRelation
   status: Status!
-  tokenNo: Int!
 }
 
 type OrderItem {

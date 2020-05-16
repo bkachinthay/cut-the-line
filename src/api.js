@@ -57,11 +57,10 @@ export function fetchVendorDetails(id) {
   );
 }
 
-const createOrder = gql(`mutation ($status: Status!, $tokenNo: Int!, $vendor: CreateOrderVendorRelation!, $items: [CreateOrderItemInput!]! ) {
+const createOrder = gql(`mutation ($status: Status!, $vendor: CreateOrderVendorRelation!, $items: [CreateOrderItemInput!]! ) {
   createOrder (
     data: {
       status: $status
-      tokenNo: $tokenNo
       vendor: $vendor
       items: {
         create: $items
@@ -77,7 +76,6 @@ const createOrder = gql(`mutation ($status: Status!, $tokenNo: Int!, $vendor: Cr
 export function placeOrder({ vendorId, items }) {
   return createOrder({
     status: "STATUS_WAITING",
-    tokenNo: 42,
     vendor: { connect: vendorId },
     items: items.map(({ count, id }) => ({
       count,
