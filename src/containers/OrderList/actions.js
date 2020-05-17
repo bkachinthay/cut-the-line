@@ -19,20 +19,18 @@ const actions = ({ setState }) => ({
       route("/cart");
     }
   },
-  getOrders({ currOrders }) {
-    if (!currOrders || currOrders.length === 0) {
-      return fetchOrders()
-        .then((allOrders) =>
-          allOrders.reduce(
-            ({ currOrders, pastOrders }, order) =>
-              order.status === STATUS_COMPLETE
-                ? { currOrders, pastOrders: [order, ...pastOrders] }
-                : { currOrders: [order, ...currOrders], pastOrders },
-            { currOrders: [], pastOrders: [] }
-          )
+  getOrders({}) {
+    return fetchOrders()
+      .then((allOrders) =>
+        allOrders.reduce(
+          ({ currOrders, pastOrders }, order) =>
+            order.status === STATUS_COMPLETE
+              ? { currOrders, pastOrders: [...pastOrders, order] }
+              : { currOrders: [...currOrders, order], pastOrders },
+          { currOrders: [], pastOrders: [] }
         )
-        .catch((error) => console.error("failed to fetch orders", error));
-    }
+      )
+      .catch((error) => console.error("failed to fetch orders", error));
   },
 });
 

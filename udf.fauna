@@ -114,8 +114,13 @@ Update(Function("completed_orders"), {
   "body": Query(
     Lambda([],
       Select("data", Map(
-        Paginate(Match(Index("queue_orders"), "STATUS_COMPLETE")),
-        Lambda("ref", Get(Var("ref")))
+        Paginate(
+          Join(
+            Match(Index("orders_search_by_status"), "STATUS_COMPLETE"),
+            Index("orders_sort_by_creation_time_desc")
+          )
+        ),
+        Lambda(["creationTime", "ref"], Get(Var("ref")))
       ))
     )
   )
@@ -127,24 +132,77 @@ Update(Function("queue_orders"), {
       Select("data",
         Map(
           Paginate(
-             Difference(
+            Join(
+              Difference(
                 Match(Index("all_orders")),
-                Match(Index("queue_orders"), "STATUS_COMPLETE"),
-             )
+                Match(Index("orders_search_by_status"), "STATUS_COMPLETE"),
+              ),
+              Index("orders_sort_by_creation_time_desc")
+            )
           ),
-          Lambda("ref", Get(Var("ref")))
+          Lambda(["creationTime", "ref"], Get(Var("ref")))
         )
       )
     )
   )
 })
 
-# rename queue_orders to orders_by_status
 CreateIndex({
-  "name": "queue_orders",
+  "name": "orders_search_by_status",
   "source": Collection("Order"),
   "terms": [{ field: ["data", "status"] }]
 })
+
+CreateIndex({
+  "name": "orders_sort_by_creation_time_desc",
+  "source": Collection("Order"),
+  "terms": [{ field: ["ref"] }],
+  "values": [
+    { field: ["data", "creationTime"], reverse: true },
+    { field: ["ref"]}
+  ]
+})
+
+CreateIndex({
+  name: "orders_sort_by_status_and_creation_time_desc",
+  source: {
+    collection: Collection("Order"),
+    fields: {
+      isComplete: Query(
+        Lambda(
+          "doc",
+          If(Equals(Select(["data", "status"], Var("doc")), "STATUS_COMPLETE"), 1, 0)
+        )
+      )
+    }
+  },
+  terms: [{ field: ["ref"] }],
+  "values": [
+    { binding: "isComplete" },
+    { field: ["data", "creationTime"], reverse: true },
+    { field: ["ref"]}
+  ]
+})
+
+Update(Function("all_orders"),
+  {"body": Query(
+    Lambda(["size", "afterCursor", "beforeCursor"],
+      Map(
+        Paginate(
+          Join(
+            Match(Index("all_orders")),
+            Index("orders_sort_by_status_and_creation_time_desc")
+          )
+        ),
+        Lambda(
+          ["isComplete", "creationTime", "ref"],
+          Get(Var("ref"))
+        )
+      )
+    )
+  )}
+)
+
 
 Update(Role("customer_role"), {
   name: "customer_role",
@@ -164,6 +222,14 @@ Update(Role("customer_role"), {
     {
       resource: Index("all_vendors"),
       actions: { read: true }
+    },
+    {
+      resource: Index("orders_sort_by_status_and_creation_time_desc"),
+      actions: { read: true }
+    },
+    {
+      resource: Function("all_orders"),
+      actions: { call: true }
     },
     {
       resource: Collection("Item"),
@@ -284,7 +350,11 @@ Update(Role("vendor_role"), {
       actions: { read: true }
     },
     {
-      resource: Index("queue_orders"),
+      resource: Index("orders_search_by_status"),
+      actions: { read: true }
+    },
+    {
+      resource: Index("orders_sort_by_creation_time_desc"),
       actions: { read: true }
     },
     {

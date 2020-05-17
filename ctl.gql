@@ -101,7 +101,7 @@ type Intl {
 
 type Query {
   allVendors: [Vendor!]! @index(name: "all_vendors")
-  allOrders: [Order!]! @index(name: "all_orders")
+  allOrders: [Order!]! @resolver(name: "all_orders", paginated: true)
   # allCustomers: [Customer!]!
   selectedVendors(name: String!): [Vendor!]
   queueOrders: [Order!] @resolver(name: "queue_orders")
