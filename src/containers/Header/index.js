@@ -55,7 +55,7 @@ function Header({ vendorId, setLanguage, language }) {
 }
 
 export default connect(
-  ({ currVendor: { id: vendorId }, language } = {}) => ({
+  ({ currVendor: { id: vendorId = "" } = {}, language } = {}) => ({
     vendorId,
     language,
   }),

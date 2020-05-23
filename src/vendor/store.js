@@ -8,15 +8,12 @@ const logger = (store) => (next, args) => (action) => {
 };
 
 const intialState = {
-  vendors: { loading: false, payload: [], error: false },
   intl: { hindi: {}, english: {} },
   language: "english",
-  menu: { loading: true, payload: [], error: false },
-  cart: {},
-  pastOrders: [],
-  currOrders: [],
-  currVendor: {},
+  queue: [], // move to vendor app
+  vendorPastOrders: [], // move to vendor app
   login: { loading: false, message: "" },
+  vendorId: "",
 };
 
 const middlewares = applyMiddleware(logger);

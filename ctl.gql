@@ -107,11 +107,13 @@ type Query {
   queueOrders: [Order!] @resolver(name: "queue_orders")
   completedOrders: [Order!]! @resolver(name: "completed_orders")
   vendorIntl(vendorId: ID!): [Intl!]! @resolver(name: "vendor_intl")
+  identity: User! @resolver(name: "user_identity")
 }
 
 type Mutation {
   createUser(input: CreateUserInput): User! @resolver(name: "create_user")
   loginUser(input: LoginUserInput): String! @resolver(name: "login_user")
+  logoutUser: Boolean! @resolver(name: "logout_user")
   createOrder(data: CreateOrderInput): Order! @resolver(name: "create_order")
   updateAOrder(data: UpdateOrderInput): Order! @resolver(name: "update_order")
 }

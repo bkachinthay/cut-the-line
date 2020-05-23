@@ -1,25 +1,37 @@
+import { route } from "preact-router";
 import vendorPusher from "../../vendorPusher";
 import { STATUS_COMPLETE } from "utils/status";
-import { fetchVendorQueueOrders, setOrderStatus } from "api";
+import {
+  fetchVendorQueueOrders,
+  setOrderStatus,
+  fetchIdentity,
+} from "../../vendor/api";
 
 const actions = ({ getState }) => ({
   getQueueOrders() {
     return fetchVendorQueueOrders()
-      .then((queue) => ({
-        queue,
-      }))
-      .catch((err) => console.error("failed to getch queue orders : ", err));
+      .then((queue) =>
+        fetchIdentity()
+          .then(({ username }) => ({
+            queue,
+            vendorId: username,
+          }))
+          .catch((err) => {
+            if (err && err.tokenIssue) route("/login");
+            console.error("failed to fetch identity : ", err);
+          })
+      )
+      .catch((err) => {
+        if (err && err.tokenIssue) route("/login");
+        console.error("failed to getch queue orders : ", err);
+      });
   },
-  setOrder({ queue, tokenNo }, order) {
-    const updatedQueue = [...queue, { ...order, tokenNo }];
+  setOrder({ queue }, order) {
+    const updatedQueue = [...queue, order];
     vendorPusher.trigger("client-queue-length-updated", {
       queue: updatedQueue.map(({ orderId }) => orderId),
     });
-    vendorPusher.trigger("client-token-assigned", {
-      orderId: order.orderId,
-      tokenNo,
-    });
-    return { tokenNo: tokenNo + 1, queue: updatedQueue };
+    return { queue: updatedQueue };
   },
   setStatus({}, id, newStatus) {
     return setOrderStatus(id, newStatus)
@@ -43,7 +55,10 @@ const actions = ({ getState }) => ({
           queue: updatedQueue,
         };
       })
-      .catch((err) => console.error("Failed to udpate order status : ", err));
+      .catch((err) => {
+        if (err && err.tokenIssue) route("/login");
+        console.error("Failed to udpate order status : ", err);
+      });
   },
 });
 

@@ -10,10 +10,10 @@ function Menu({
   vendorId,
   vendorName,
   vendorDescription,
+  vendorUsername,
   getMenu,
   setOrderStatus,
   setOrdersBefore,
-  setTokenNo,
   loading,
   payload,
   error,
@@ -22,15 +22,14 @@ function Menu({
     getMenu(vendorId);
   }, [getMenu, vendorId]);
   useEffect(() => {
-    pusher.init("me", `presence-${vendorId}`, [
-      ["client-order-status-updated", ({ order }) => setOrderStatus(order)],
-      ["client-queue-length-updated", ({ queue }) => setOrdersBefore(queue)],
-      [
-        "client-token-assigned",
-        ({ orderId, tokenNo }) => setTokenNo(orderId, tokenNo),
-      ],
-    ]);
-  }, [setOrderStatus, setOrdersBefore, setTokenNo, vendorId]);
+    if (vendorUsername) {
+      pusher.init("me", `presence-${vendorUsername}`, [
+        ["client-order-status-updated", ({ order }) => setOrderStatus(order)],
+        ["client-queue-length-updated", ({ queue }) => setOrdersBefore(queue)],
+      ]);
+    }
+    return pusher.destroy;
+  }, [setOrderStatus, setOrdersBefore, vendorUsername]);
   let itemsList = null;
   if (loading) {
     itemsList = <div class="black-70 tc f4">Loading...</div>;
@@ -61,7 +60,18 @@ function Menu({
 export default connect(
   ({
     menu: { loading, payload, error },
-    currVendor: { name: vendorName, description: vendorDescription },
-  }) => ({ loading, payload, error, vendorName, vendorDescription }),
+    currVendor: {
+      name: vendorName,
+      description: vendorDescription,
+      vendorUsername,
+    },
+  }) => ({
+    loading,
+    payload,
+    error,
+    vendorName,
+    vendorDescription,
+    vendorUsername,
+  }),
   actions
 )(Menu);

@@ -8,7 +8,11 @@ function StatusMessage({ value, ordersBefore }) {
     <Fragment>
       {STATUS_MESSAGE[status]}
       {status === STATUS_WAITING && typeof ordersBefore === "number" ? (
-        <Text id="statusMessage.ordersBefore" fields={{ count: ordersBefore }}>
+        <Text
+          id="statusMessage.ordersBefore"
+          plural={ordersBefore}
+          fields={{ count: ordersBefore }}
+        >
           {`There ${
             ordersBefore === 1 ? "is 1 order" : `are ${ordersBefore} orders`
           } before this.`}

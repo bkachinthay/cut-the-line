@@ -1,4 +1,5 @@
-import { fetchVendorCompletedOrders } from "api";
+import { route } from "preact-router";
+import { fetchVendorCompletedOrders } from "../../vendor/api";
 
 const actions = () => ({
   getPastOrders() {
@@ -6,7 +7,10 @@ const actions = () => ({
       .then((vendorPastOrders) => ({
         vendorPastOrders,
       }))
-      .catch((err) => console.error("failed to fetch past orders : ", err));
+      .catch((err) => {
+        if (err && err.tokenIssue) route("/login");
+        console.error("failed to fetch past orders : ", err);
+      });
   },
 });
 

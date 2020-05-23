@@ -30,7 +30,10 @@ const actions = ({ setState }) => ({
           { currOrders: [], pastOrders: [] }
         )
       )
-      .catch((error) => console.error("failed to fetch orders", error));
+      .catch((err) => {
+        if (err && err.tokenIssue) route("/login");
+        console.error("failed to fetch orders", err);
+      });
   },
 });
 

@@ -1,16 +1,14 @@
 import Router from "preact-router";
 import { Provider } from "redux-zero/preact";
 import Header from "containers/Header";
-import Home from "containers/Home";
-import Menu from "containers/Menu";
-import Cart from "containers/Cart";
-import OrderList from "containers/OrderList";
-import Error from "components/Error";
+import Queue from "containers/Queue";
+import PastOrders from "containers/PastOrders";
 import Login from "containers/Login";
+import Error from "components/Error";
 import "tachyons/css/tachyons.css";
-import "./index.css";
+import "../index.css";
 import store from "./store";
-import IntlWrapper from "./IntlWrapper";
+import IntlWrapper from "../IntlWrapper";
 
 function App() {
   return (
@@ -19,11 +17,9 @@ function App() {
         <div class="sans-serif mw7 center bg-white black pt5">
           <Header />
           <Router>
-            <Home path="/" />
+            <Queue path="/" />
             <Login path="/login" />
-            <Menu path="/v/:vendorId" />
-            <Cart path="/cart" />
-            <OrderList path="/orders" />
+            <PastOrders path="/completed" />
             <Error type={404} default />
           </Router>
         </div>

@@ -1,3 +1,4 @@
+import { route } from "preact-router";
 import { fetchVendorDetails, fetchIntl } from "api";
 import { STATUS_COMPLETE } from "utils/status";
 
@@ -10,17 +11,23 @@ const actions = ({ setState }) => ({
 
     fetchIntl(vendorId)
       .then((intl) => setState({ intl }))
-      .catch((err) => console.error("vendor intl fetch err : ", err));
+      .catch((err) => {
+        if (err && err.tokenIssue) route("/login");
+        console.error("vendor intl fetch err : ", err);
+      });
 
     return fetchVendorDetails(vendorId)
-      .then(({ name, description, id, items }) => ({
-        currVendor: { name, description, id },
+      .then(({ name, description, vendorUsername, id, items }) => ({
+        currVendor: { name, description, id, vendorUsername },
         menu: { loading: false, payload: items, error: false },
       }))
-      .catch((error) => ({
-        currVendor: {},
-        menu: { loading: false, payload: [], error },
-      }));
+      .catch((error) => {
+        if (error && error.tokenIssue) route("/login");
+        return {
+          currVendor: {},
+          menu: { loading: false, payload: [], error },
+        };
+      });
   },
 
   setOrderStatus({ currOrders, pastOrders }, { orderId, status } = {}) {
@@ -50,13 +57,6 @@ const actions = ({ setState }) => ({
         const ordersBefore = queue.indexOf(order.orderId);
         return ordersBefore > -1 ? { ...order, ordersBefore } : order;
       }),
-    };
-  },
-  setTokenNo({ currOrders }, orderId, tokenNo) {
-    return {
-      currOrders: currOrders.map((order) =>
-        order.orderId === orderId ? { ...order, tokenNo } : order
-      ),
     };
   },
   setConnState({}, updatedState) {

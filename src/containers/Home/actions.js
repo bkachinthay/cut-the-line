@@ -1,4 +1,5 @@
 import { fetchVendors } from "api";
+import { route } from "preact-router";
 
 const actions = ({ setState }) => ({
   getVendors(state, q) {
@@ -10,9 +11,12 @@ const actions = ({ setState }) => ({
       .then((payload) => ({
         vendors: { loading: false, payload, error: false },
       }))
-      .catch((error) => ({
-        vendors: { loading: false, payload: [], error },
-      }));
+      .catch((error) => {
+        if (error && error.tokenIssue) route("/login");
+        return {
+          vendors: { loading: false, payload: [], error },
+        };
+      });
   },
 });
 

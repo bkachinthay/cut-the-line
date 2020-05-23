@@ -75,6 +75,14 @@ Update(Function("login_user"), {
   )
 })
 
+Update(Function("logout_user"), {
+  "body": Query(
+    Lambda([],
+      Logout(true)
+    )    
+  )
+})
+
 Update(Function("update_order"), {
   "body": Query(
     Lambda(["input"],
@@ -216,6 +224,10 @@ Update(Role("customer_role"), {
   },
   privileges: [
     {
+      resource: Collection("User"),
+      actions: { read: true },
+    },
+    {
       resource: Collection("Vendor"),
       actions: { read: true }
     },
@@ -291,6 +303,10 @@ Update(Role("customer_role"), {
     {
       resource: Collection("Token"),
       actions: { read: true, write: true }
+    },
+    {
+      resource: Function("logout_user"),
+      actions: { call: true }
     },
   ]
 })
@@ -380,7 +396,15 @@ Update(Role("vendor_role"), {
     {
       resource: Collection("Intl"),
       actions: { read: true }
-    }
+    },
+    {
+      resource: Function("user_identity"),
+      actions: { call: true }
+    },
+    {
+      resource: Function("logout_user"),
+      actions: { call: true }
+    },
   ]
 })
 
@@ -402,6 +426,14 @@ Update(Function("vendor_intl"), {
         ),
         Lambda('x', Get(Var('x')))
       ))
+    )
+  )
+})
+
+Update(Function("user_identity"), {
+  "body": Query(
+    Lambda([],
+      Get(Identity())
     )
   )
 })

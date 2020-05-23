@@ -18,7 +18,9 @@ const pusher = {
     events.forEach(([name, cb]) => this.bind(name, cb));
   },
   destroy() {
-    this._pusher.disconnect();
+    if (this._pusher) {
+      this._pusher.disconnect();
+    }
     this.channel = null;
     this.userId = null;
     this.userName = null;

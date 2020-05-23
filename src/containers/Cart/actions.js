@@ -15,7 +15,7 @@ const actions = ({ setState }) => ({
     } = state;
     const items = Object.values(cart).filter(({ count }) => count !== 0);
     return placeOrder({ vendorId, items })
-      .then(({ orderId, tokenNo, status }) => {
+      .then(({ orderId, tokenNo, status, username, creationTime }) => {
         const itemCount = sum(items.map(({ count }) => count || 0));
         const order = {
           orderId,
@@ -26,13 +26,18 @@ const actions = ({ setState }) => ({
           items,
           status,
           tokenNo,
+          customerId: username,
+          creationTime,
         };
         pusher.trigger("client-order-placed", { order });
         order.ordersBefore = null;
         setState({ cart: {} });
         route("/orders");
       })
-      .catch(() => console.log("could not place order"));
+      .catch((err) => {
+        if (err && err.tokenIssue) route("/login");
+        console.error("could not place order : ", err);
+      });
   },
 });
 

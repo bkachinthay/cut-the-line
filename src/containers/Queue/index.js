@@ -9,13 +9,11 @@ function Queue({ queue, vendorId, setOrder, setStatus, getQueueOrders }) {
     getQueueOrders();
   }, [getQueueOrders]);
   useEffect(() => {
-    vendorPusher.init(vendorId, `presence-${vendorId}`, [
-      [
-        "client-order-placed",
-        ({ order, userId, userName }) =>
-          setOrder({ ...order, customerId: userId, customerName: userName }),
-      ],
-    ]);
+    if (vendorId) {
+      vendorPusher.init(vendorId, `presence-${vendorId}`, [
+        ["client-order-placed", ({ order }) => setOrder(order)],
+      ]);
+    }
     return vendorPusher.destroy;
   }, [vendorId, setOrder]);
   return (
@@ -53,4 +51,7 @@ function Queue({ queue, vendorId, setOrder, setStatus, getQueueOrders }) {
   );
 }
 
-export default connect(({ queue }) => ({ queue }), actions)(Queue);
+export default connect(
+  ({ queue, vendorId }) => ({ queue, vendorId }),
+  actions
+)(Queue);
