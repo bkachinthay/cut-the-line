@@ -1,3 +1,4 @@
+import { useEffect } from "preact/hooks";
 import Router from "preact-router";
 import { Provider } from "redux-zero/preact";
 import Header from "containers/Header";
@@ -7,17 +8,40 @@ import Cart from "containers/Cart";
 import OrderList from "containers/OrderList";
 import Error from "components/Error";
 import Login from "containers/Login";
+import { askNotificationPermission } from "utils/notifications";
 import "tachyons/css/tachyons.css";
 import "./index.css";
 import store from "./store";
 import IntlWrapper from "./IntlWrapper";
 
+// "home" -> "menu" -> "cart" -> "orders"
+function backURL(currPath, vendorId) {
+  if (currPath === "/orders") {
+    return [vendorId ? `/v/${vendorId}` : "/", "Orders"];
+  } else if (currPath === "/cart") {
+    return [vendorId ? `/v/${vendorId}` : "/", "Cart"];
+  } else if (/^\/v\/\w+\/?$/.test(currPath)) {
+    return ["/", "Vendor"];
+  } else if (currPath === "/login") {
+    return ["", "Login"];
+  } else if (currPath === "/") {
+    return ["", "Home"];
+  }
+  return ["/", ""];
+}
+
+const links = [
+  { link: "/", label: "Home" },
+  { link: "/orders", label: "All Orders" },
+];
+
 function App() {
+  useEffect(() => askNotificationPermission());
   return (
     <Provider store={store}>
       <IntlWrapper>
         <div class="sans-serif mw7 center bg-white black pt5">
-          <Header />
+          <Header backURL={backURL} links={links} />
           <Router>
             <Home path="/" />
             <Login path="/login" />

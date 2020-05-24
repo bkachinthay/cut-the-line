@@ -10,12 +10,27 @@ import "../index.css";
 import store from "./store";
 import IntlWrapper from "../IntlWrapper";
 
+// "queue" -> "completed"
+function backURL(currPath) {
+  if (currPath === "/completed") {
+    return ["/", "Completed Orders"];
+  } else if (currPath === "/") {
+    return ["", "Queue"];
+  }
+  return ["/", ""];
+}
+
+const links = [
+  { link: "/", label: "Queue" },
+  { link: "/completed", label: "Completed Orders" },
+];
+
 function App() {
   return (
     <Provider store={store}>
       <IntlWrapper>
         <div class="sans-serif mw7 center bg-white black pt5">
-          <Header />
+          <Header backURL={backURL} links={links} />
           <Router>
             <Queue path="/" />
             <Login path="/login" />

@@ -3,24 +3,10 @@ import { route } from "preact-router";
 import Match from "preact-router/match";
 import { BackIcon } from "components/Icons";
 import Dropdown from "components/Dropdown";
+import { logout } from "user";
 import actions from "./actions";
 
-// "home" -> "menu" -> "cart" -> "orders"
-
-function backURL(currPath, vendorId) {
-  if (currPath === "/orders") {
-    return [vendorId ? `/v/${vendorId}` : "/", "Orders"];
-  } else if (currPath === "/cart") {
-    return [vendorId ? `/v/${vendorId}` : "/", "Cart"];
-  } else if (/^\/v\/\w+\/?$/.test(currPath)) {
-    return ["/", "Vendor"];
-  } else if (currPath === "/") {
-    return ["", "Home"];
-  }
-  return ["/", ""];
-}
-
-function Header({ vendorId, setLanguage, language }) {
+function Header({ backURL, links, vendorId, setLanguage, language }) {
   const langaugeItem =
     language == "hindi"
       ? { label: "In English", callback: () => setLanguage("english") }
@@ -29,24 +15,33 @@ function Header({ vendorId, setLanguage, language }) {
     <Match path="/">
       {({ path }) => {
         const [backUrl, heading] = backURL(path, vendorId);
+        const filteredLinks = links.filter(({ link }) => link !== path);
         return (
           <h1 class="mv0 w-100 bg-red white f3 fw3 pa2 lh-title flex items-center fixed top-0 mw7 z-3">
-            {backUrl && (
+            {backUrl ? (
               <a
                 class="w2 h2 mr3 pointer no-underline"
                 onClick={() => route(backUrl)}
               >
                 <BackIcon classes="w2" />
               </a>
+            ) : (
+              <div class="w2 h2" />
             )}
             <span class="flex-auto">{heading}</span>
-            <Dropdown
-              align="left"
-              links={[
-                { link: "/vendor/orders", label: "Completed Orders" },
-                langaugeItem,
-              ]}
-            />
+            {path !== "/login" ? (
+              <Dropdown
+                align="left"
+                links={[
+                  ...filteredLinks,
+                  langaugeItem,
+                  {
+                    label: "Logout",
+                    callback: () => logout().then(() => route("/login")),
+                  },
+                ]}
+              />
+            ) : null}
           </h1>
         );
       }}
