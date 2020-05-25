@@ -7,8 +7,10 @@
     "start": "per-env",
     "start:production": "npm run -s serve",
     "start:development": "npm run -s dev",
-    "build": "preact build",
-    "serve": "preact build && sirv build --cors --single",
+    "build": "preact build --no-prerender",
+    "serve": "preact build --no-prerender && sirv build --cors --single",
+    "buildVendor": "preact build --no-prerender --src src/vendor --dest buildVendor",
+    "serveVendor": "preact build --no-prerender --src src/vendor --dest buildVendor && sirv buildVendor --cors --single --port 5001",
     "dev": "preact watch",
     "lint": "eslint src",
     "test": "jest"

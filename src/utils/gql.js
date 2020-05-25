@@ -1,4 +1,4 @@
-import graphql from "graphql.js";
+import graphql from "./graphql.js";
 import config from "../../config";
 
 function getGqlInstance() {
