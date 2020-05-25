@@ -1,4 +1,4 @@
-// import appConfig from "./config";
+import appConfig from "./config";
 
 export default (config, env, helpers) => {
   // set ./src as base folders.
@@ -9,7 +9,7 @@ export default (config, env, helpers) => {
   // config.devServer.proxy = [
   //   {
   //     path: "/.netlify/functions/**",
-  //     target: appConfig.apiHost,
+  //     target: "http://localhost:9000",
   //   },
   // ];
 };
