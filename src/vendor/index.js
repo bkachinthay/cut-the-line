@@ -1,10 +1,10 @@
 import Router from "preact-router";
 import { Provider } from "redux-zero/preact";
 import Header from "containers/Header";
-import Queue from "containers/Queue";
-import PastOrders from "containers/PastOrders";
-import Login from "containers/Login";
-import Error from "components/Error";
+import Queue from "routes/Queue";
+import PastOrders from "routes/PastOrders";
+import Login from "routes/Login";
+import Error from "routes/Error";
 import "tachyons/css/tachyons.css";
 import "../index.css";
 import store from "./store";
