@@ -64,7 +64,6 @@ const pusher = {
     }
   },
   bind(eventName, onConnect) {
-    this.channel.bind("test", () => console.log("test triggered"));
     this.channel.bind(eventName, onConnect);
   },
   trigger(eventName, payload) {

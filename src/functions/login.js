@@ -6,7 +6,7 @@ const graphql = require("graphql.js");
 const gql = graphql(process.env.GQL_URL, {
   alwaysAutodeclare: true,
   asJSON: true,
-  debug: true,
+  // debug: true,
   method: "post",
   headers: {
     "Content-Type": "application/json",

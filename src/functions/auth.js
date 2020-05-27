@@ -13,7 +13,7 @@ const pusher = new Pusher({
 exports.handler = function (event, context, callback) {
   const query = event.queryStringParameters;
 
-  console.log("pusher app id : ", process.env.PUSHER_APP_ID);
+  // console.log("pusher app id : ", process.env.PUSHER_APP_ID);
   const presenceData = {
     user_id: query.socket_id,
     user_info: {
@@ -26,7 +26,7 @@ exports.handler = function (event, context, callback) {
   );
   const authCallback = query.callback.replace(/"/g, "") + "(" + auth + ")";
 
-  console.log("auth : ", query, auth, authCallback);
+  // console.log("auth : ", query, auth, authCallback);
   callback(null, {
     statusCode: 200,
     headers: { "Content-Type": "application/javascript" },

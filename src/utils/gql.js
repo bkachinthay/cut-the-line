@@ -7,7 +7,7 @@ function getGqlInstance() {
     ? graphql(config.gqlURL, {
         alwaysAutodeclare: true,
         asJSON: true,
-        debug: true,
+        // debug: true,
         method: "post",
         headers: {
           "Content-Type": "application/json",
