@@ -13,8 +13,8 @@ const intialState = {
   language: "english",
   menu: { loading: true, payload: [], error: false },
   cart: {},
-  pastOrders: [],
-  currOrders: [],
+  pastOrders: null,
+  currOrders: null,
   currVendor: {},
   login: { loading: false, message: "" },
 };

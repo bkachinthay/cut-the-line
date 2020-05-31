@@ -3,7 +3,7 @@ import { placeOrder } from "api";
 import sum from "utils/sum";
 import pusher from "../../pusher";
 
-const actions = ({ setState }) => ({
+const actions = () => ({
   setItemCount({ cart }, id, count) {
     const prevItem = cart[id];
     return { cart: { ...cart, [id]: { ...prevItem, count } } };
@@ -11,8 +11,10 @@ const actions = ({ setState }) => ({
   setOrder(state, price) {
     const {
       cart,
-      currVendor: { id: vendorId, name: vendorName },
+      currVendor: { id: vendorId, name: vendorName, vendorUsername },
+      currOrders,
     } = state;
+    const orderList = (currOrders && currOrders.payload) || [];
     const items = Object.values(cart).filter(({ count }) => count !== 0);
     return placeOrder({ vendorId, items })
       .then(({ orderId, tokenNo, status, username, creationTime }) => {
@@ -29,10 +31,17 @@ const actions = ({ setState }) => ({
           customerId: username,
           creationTime,
         };
-        pusher.trigger("client-order-placed", { order });
+        pusher.trigger(vendorUsername, "client-order-placed", { order });
         order.ordersBefore = null;
-        setState({ cart: {} });
         route("/orders");
+        return {
+          cart: {},
+          currOrders: {
+            loading: false,
+            error: false,
+            payload: [order, ...orderList],
+          },
+        };
       })
       .catch((err) => {
         if (err && err.tokenIssue) route("/login");

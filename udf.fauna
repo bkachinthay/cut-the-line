@@ -86,9 +86,18 @@ Update(Function("logout_user"), {
 Update(Function("update_order"), {
   "body": Query(
     Lambda(["input"],
-      Update(
-        Ref(Collection("Order"), Select("id", Var("input"))),
-        { data: { status: Select("status", Var("input")) } }
+      Let({
+          status: Select(["status"], Var("input")),
+          updateObj: If(
+            Equals(Var("status"), "STATUS_COMPLETE"),
+            { status: Var("status"), tokenNo: 0 },
+            { status: Var("status") },
+          )
+        },
+        Update(
+          Ref(Collection("Order"), Select("id", Var("input"))),
+          { data: Var("updateObj") }
+        )
       )
     )
   )
@@ -145,7 +154,7 @@ Update(Function("queue_orders"), {
                 Match(Index("all_orders")),
                 Match(Index("orders_search_by_status"), "STATUS_COMPLETE"),
               ),
-              Index("orders_sort_by_creation_time_desc")
+              Index("orders_sort_by_creation_time_asc")
             )
           ),
           Lambda(["creationTime", "ref"], Get(Var("ref")))
@@ -159,6 +168,16 @@ CreateIndex({
   "name": "orders_search_by_status",
   "source": Collection("Order"),
   "terms": [{ field: ["data", "status"] }]
+})
+
+CreateIndex({
+  "name": "orders_sort_by_creation_time_asc",
+  "source": Collection("Order"),
+  "terms": [{ field: ["ref"] }],
+  "values": [
+    { field: ["data", "creationTime"] },
+    { field: ["ref"]}
+  ]
 })
 
 CreateIndex({
@@ -308,6 +327,30 @@ Update(Role("customer_role"), {
       resource: Function("logout_user"),
       actions: { call: true }
     },
+    {
+      resource: Function("queue_orders"),
+      actions: { call: true }
+    },
+    {
+      resource: Function("completed_orders"),
+      actions: { call: true }
+    },
+    {
+      resource: Index("orders_search_by_status"),
+      actions: { read: true }
+    },
+    {
+      resource: Index("orders_sort_by_creation_time_desc"),
+      actions: { read: true }
+    },
+    {
+      resource: Index("orders_sort_by_creation_time_asc"),
+      actions: { read: true }
+    },
+    {
+      resource: Function("user_identity"),
+      actions: { call: true }
+    },
   ]
 })
 
@@ -371,6 +414,10 @@ Update(Role("vendor_role"), {
     },
     {
       resource: Index("orders_sort_by_creation_time_desc"),
+      actions: { read: true }
+    },
+    {
+      resource: Index("orders_sort_by_creation_time_asc"),
       actions: { read: true }
     },
     {

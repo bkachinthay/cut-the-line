@@ -124,34 +124,35 @@ export function placeOrder({ vendorId, items }) {
   );
 }
 
-const allOrdersQuery = `query {
-  allOrders {
-    data {
+const pastOrdersQuery = `query {
+  completedOrders {
+    _id
+    status
+    tokenNo
+    creationTime
+    vendor {
       _id
-      status
-      tokenNo
-      creationTime
-      vendor {
-        _id
-        name
+      name
+      owner {
+        username
       }
-      items {
-        data {
-          item {
-            _id
-            name
-            price
-            isVeg
-          }
-          count
+    }
+    items {
+      data {
+        item {
+          _id
+          name
+          price
+          isVeg
         }
+        count
       }
     }
   }
 }
 `;
 
-export function fetchOrders() {
+export function fetchPastOrders() {
   const gql = getGqlInstance();
   if (!gql) {
     return Promise.reject({
@@ -160,8 +161,8 @@ export function fetchOrders() {
     });
   }
   // add price to schema
-  return gql(allOrdersQuery)({}).then(({ allOrders: { data } }) =>
-    data.map(
+  return gql(pastOrdersQuery)({}).then(({ completedOrders }) =>
+    completedOrders.map(
       ({
         _id,
         status,
@@ -176,6 +177,7 @@ export function fetchOrders() {
         creationTime,
         vendorName: vendor.name,
         vendorId: vendor._id,
+        vendorUsername: vendor.owner.username,
         price: orderItems.reduce(
           (acc, { count, item: { price } }) => acc + count * price,
           0
@@ -190,6 +192,83 @@ export function fetchOrders() {
         })),
       })
     )
+  );
+}
+
+const queueOrdersQuery = `query {
+  queueOrders {
+    _id
+    status
+    tokenNo
+    creationTime
+    vendor {
+      _id
+      name
+      owner {
+        username
+      }
+    }
+    items {
+      data {
+        item {
+          _id
+          name
+          price
+          isVeg
+        }
+        count
+      }
+    }
+  }
+  identity {
+    username
+  }
+}
+`;
+
+export function fetchQueueOrders() {
+  const gql = getGqlInstance();
+  if (!gql) {
+    return Promise.reject({
+      tokenIssue: true,
+      message: "userToken not available",
+    });
+  }
+  // add price to schema
+  return gql(queueOrdersQuery)({}).then(
+    ({ queueOrders, identity: { username } }) => ({
+      username,
+      queueOrders: queueOrders.map(
+        ({
+          _id,
+          status,
+          tokenNo,
+          creationTime,
+          vendor,
+          items: { data: orderItems },
+        }) => ({
+          orderId: _id,
+          status,
+          tokenNo,
+          creationTime,
+          vendorName: vendor.name,
+          vendorId: vendor._id,
+          vendorUsername: vendor.owner.username,
+          price: orderItems.reduce(
+            (acc, { count, item: { price } }) => acc + count * price,
+            0
+          ), // get from db
+          itemCount: sum(orderItems.map(({ count }) => count || 0)),
+          items: orderItems.map(({ count, item }) => ({
+            id: item._id,
+            name: item.name,
+            price: item.price,
+            isVeg: item.isVeg,
+            count,
+          })),
+        })
+      ),
+    })
   );
 }
 

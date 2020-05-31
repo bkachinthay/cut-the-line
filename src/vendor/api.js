@@ -1,25 +1,6 @@
 import getGqlInstance from "utils/gql";
 import sum from "utils/sum";
 
-const identityQuery = `query {
-  identity {
-    username
-  }  
-}`;
-
-export function fetchIdentity() {
-  const gql = getGqlInstance();
-  if (!gql) {
-    return Promise.reject({
-      tokenIssue: true,
-      message: "userToken not available",
-    });
-  }
-  return gql(identityQuery)({}).then(({ identity: { username } }) => ({
-    username,
-  }));
-}
-
 const vendorQueueOrdersQuery = `query {
   queueOrders {
     _id
@@ -45,6 +26,9 @@ const vendorQueueOrdersQuery = `query {
       }
     }
   }
+  identity {
+    username
+  }
 }
 `;
 
@@ -57,38 +41,41 @@ export function fetchVendorQueueOrders() {
     });
   }
   // add price to schema
-  return gql(vendorQueueOrdersQuery)({}).then(({ queueOrders }) =>
-    queueOrders.map(
-      ({
-        _id,
-        status,
-        tokenNo,
-        creationTime,
-        orderBy: { username },
-        vendor,
-        items: { data: orderItems },
-      }) => ({
-        orderId: _id,
-        status,
-        tokenNo,
-        creationTime,
-        customerId: username,
-        vendorName: vendor.name,
-        vendorId: vendor._id,
-        price: orderItems.reduce(
-          (acc, { count, item: { price } }) => acc + count * price,
-          0
-        ), // get from db
-        itemCount: sum(orderItems.map(({ count }) => count || 0)),
-        items: orderItems.map(({ count, item }) => ({
-          id: item._id,
-          name: item.name,
-          price: item.price,
-          isVeg: item.isVeg,
-          count,
-        })),
-      })
-    )
+  return gql(vendorQueueOrdersQuery)({}).then(
+    ({ queueOrders, identity: { username: vendorUsername } }) => ({
+      username: vendorUsername,
+      queueOrders: queueOrders.map(
+        ({
+          _id,
+          status,
+          tokenNo,
+          creationTime,
+          orderBy: { username },
+          vendor,
+          items: { data: orderItems },
+        }) => ({
+          orderId: _id,
+          status,
+          tokenNo,
+          creationTime,
+          customerId: username,
+          vendorName: vendor.name,
+          vendorId: vendor._id,
+          price: orderItems.reduce(
+            (acc, { count, item: { price } }) => acc + count * price,
+            0
+          ), // get from db
+          itemCount: sum(orderItems.map(({ count }) => count || 0)),
+          items: orderItems.map(({ count, item }) => ({
+            id: item._id,
+            name: item.name,
+            price: item.price,
+            isVeg: item.isVeg,
+            count,
+          })),
+        })
+      ),
+    })
   );
 }
 

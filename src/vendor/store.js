@@ -10,7 +10,7 @@ import createStore from "redux-zero";
 const intialState = {
   intl: { hindi: {}, english: {} },
   language: "english",
-  queue: [],
+  queue: null,
   vendorPastOrders: [],
   login: { loading: false, message: "" },
   vendorId: "",

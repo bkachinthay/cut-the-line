@@ -1,6 +1,7 @@
 import Router from "preact-router";
 import { Provider } from "redux-zero/preact";
 import Header from "containers/Header";
+import VendorSetup from "containers/VendorSetup";
 import Queue from "routes/Queue";
 import PastOrders from "routes/PastOrders";
 import Login from "routes/Login";
@@ -31,6 +32,7 @@ function App() {
       <IntlWrapper>
         <div class="sans-serif mw7 center bg-white black pt5">
           <Header backURL={backURL} links={links} />
+          <VendorSetup />
           <Router>
             <Queue path="/" />
             <Login path="/login" />

@@ -3,17 +3,13 @@ import { connect } from "redux-zero/preact";
 import { Text } from "utils/intl";
 import ItemCard from "containers/ItemCard";
 import CartPreview from "containers/CartPreview";
-import pusher from "../../pusher";
 import actions from "./actions";
 
 function Menu({
   vendorId,
   vendorName,
   vendorDescription,
-  vendorUsername,
   getMenu,
-  setOrderStatus,
-  setOrdersBefore,
   loading,
   payload,
   error,
@@ -21,15 +17,6 @@ function Menu({
   useEffect(() => {
     getMenu(vendorId);
   }, [getMenu, vendorId]);
-  useEffect(() => {
-    if (vendorUsername) {
-      pusher.init("me", `presence-${vendorUsername}`, [
-        ["client-order-status-updated", ({ order }) => setOrderStatus(order)],
-        ["client-queue-length-updated", ({ queue }) => setOrdersBefore(queue)],
-      ]);
-    }
-    return pusher.destroy;
-  }, [setOrderStatus, setOrdersBefore, vendorUsername]);
   let itemsList = null;
   if (loading) {
     itemsList = <div class="black-70 tc f4">Loading...</div>;

@@ -1,54 +1,44 @@
-import { useEffect } from "preact/hooks";
 import { connect } from "redux-zero/preact";
 import QueueItem from "components/QueueItem";
-import vendorPusher from "../../vendorPusher";
 import actions from "./actions";
 
-function Queue({ queue, vendorId, setOrder, setStatus, getQueueOrders }) {
-  useEffect(() => {
-    getQueueOrders();
-  }, [getQueueOrders]);
-  useEffect(() => {
-    if (vendorId) {
-      vendorPusher.init(vendorId, `presence-${vendorId}`, [
-        ["client-order-placed", ({ order }) => setOrder(order)],
-      ]);
-    }
-    return vendorPusher.destroy;
-  }, [vendorId, setOrder]);
-  return (
-    <ul class="list pl0 measure center">
-      {queue.length === 0 && (
-        <li class="black-70 tc f4">{"No active Orders"}</li>
-      )}
-      {queue.map(
-        ({
-          orderId,
-          customerId,
-          itemCount,
-          price,
-          items,
-          status,
-          creationTime,
-          tokenNo,
-        }) => (
-          <li key={orderId} class="mv3">
-            <QueueItem
-              orderId={orderId}
-              customerName={customerId}
-              itemCount={itemCount}
-              price={price}
-              items={items}
-              setStatus={setStatus}
-              status={status}
-              tokenNo={tokenNo}
-              creationTime={creationTime}
-            />
-          </li>
-        )
-      )}
-    </ul>
-  );
+function Queue({ queue, setStatus }) {
+  let orders = null;
+  if (!queue || queue.loading) {
+    orders = <li class="black-70 tc f4">{"Loading Orders..."}</li>;
+  } else if (queue.error) {
+    orders = <li class="black-70 tc f4">{"Failed to fetch orders."}</li>;
+  } else if (queue.payload && queue.payload.length === 0) {
+    orders = <li class="black-70 tc f4">{"No active Orders"}</li>;
+  } else if (queue.payload && queue.payload.length) {
+    orders = queue.payload.map(
+      ({
+        orderId,
+        customerId,
+        itemCount,
+        price,
+        items,
+        status,
+        creationTime,
+        tokenNo,
+      }) => (
+        <li key={orderId} class="mv3">
+          <QueueItem
+            orderId={orderId}
+            customerName={customerId}
+            itemCount={itemCount}
+            price={price}
+            items={items}
+            setStatus={setStatus}
+            status={status}
+            tokenNo={tokenNo}
+            creationTime={creationTime}
+          />
+        </li>
+      )
+    );
+  }
+  return <ul class="list pl0 measure center">{orders}</ul>;
 }
 
 export default connect(

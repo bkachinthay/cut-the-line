@@ -2,6 +2,7 @@ import { useEffect } from "preact/hooks";
 import Router from "preact-router";
 import { Provider } from "redux-zero/preact";
 import Header from "containers/Header";
+import Setup from "containers/Setup";
 import Home from "routes/Home";
 import Menu from "routes/Menu";
 import Cart from "routes/Cart";
@@ -42,6 +43,7 @@ function App() {
       <IntlWrapper>
         <div class="sans-serif mw7 center bg-white black pt5">
           <Header backURL={backURL} links={links} />
+          <Setup />
           <Router>
             <Home path="/" />
             <Login path="/login" />
