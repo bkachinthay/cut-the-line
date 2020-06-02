@@ -83,6 +83,11 @@ const createOrderQuery = `mutation ($status: Status!, $vendor: CreateOrderVendor
     _id
     status
     tokenNo
+    vendor {
+      owner {
+        username
+      }
+    }
     orderBy {
       username
     }
@@ -113,6 +118,7 @@ export function placeOrder({ vendorId, items }) {
         tokenNo,
         orderBy: { username },
         creationTime,
+        vendor,
       },
     }) => ({
       orderId: _id,
@@ -120,6 +126,7 @@ export function placeOrder({ vendorId, items }) {
       tokenNo,
       username,
       creationTime,
+      vendorUsername: vendor.owner.username,
     })
   );
 }

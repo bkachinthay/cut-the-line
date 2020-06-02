@@ -11,38 +11,48 @@ const actions = () => ({
   setOrder(state, price) {
     const {
       cart,
-      currVendor: { id: vendorId, name: vendorName, vendorUsername },
+      currVendor: { id: vendorId, name: vendorName },
       currOrders,
     } = state;
     const orderList = (currOrders && currOrders.payload) || [];
     const items = Object.values(cart).filter(({ count }) => count !== 0);
     return placeOrder({ vendorId, items })
-      .then(({ orderId, tokenNo, status, username, creationTime }) => {
-        const itemCount = sum(items.map(({ count }) => count || 0));
-        const order = {
+      .then(
+        ({
           orderId,
-          vendorId,
-          vendorName,
-          itemCount,
-          price,
-          items,
-          status,
           tokenNo,
-          customerId: username,
+          status,
+          username,
           creationTime,
-        };
-        pusher.trigger(vendorUsername, "client-order-placed", { order });
-        order.ordersBefore = null;
-        route("/orders");
-        return {
-          cart: {},
-          currOrders: {
-            loading: false,
-            error: false,
-            payload: [order, ...orderList],
-          },
-        };
-      })
+          vendorUsername,
+        }) => {
+          const itemCount = sum(items.map(({ count }) => count || 0));
+          const order = {
+            orderId,
+            vendorId,
+            vendorName,
+            vendorUsername,
+            itemCount,
+            price,
+            items,
+            status,
+            tokenNo,
+            customerId: username,
+            creationTime,
+          };
+          pusher.trigger(vendorUsername, "client-order-placed", { order });
+          order.ordersBefore = null;
+          route("/orders");
+          return {
+            cart: {},
+            currOrders: {
+              loading: false,
+              error: false,
+              payload: [order, ...orderList],
+            },
+          };
+        }
+      )
       .catch((err) => {
         if (err && err.tokenIssue) route("/login");
         console.error("could not place order : ", err);
