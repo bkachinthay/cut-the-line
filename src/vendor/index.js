@@ -1,5 +1,6 @@
 import Router from "preact-router";
 import { Provider } from "redux-zero/preact";
+import ReactGA from "react-ga";
 import Header from "containers/Header";
 import VendorSetup from "containers/VendorSetup";
 import Queue from "routes/Queue";
@@ -25,6 +26,10 @@ const links = [
   { link: "/", label: "Queue" },
   { link: "/completed", label: "Completed Orders" },
 ];
+
+// google analytics
+ReactGA.initialize("UA-171013242-2");
+ReactGA.pageview(window.location.pathname + window.location.search);
 
 function App() {
   return (
