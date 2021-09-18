@@ -10,4 +10,6 @@ node_modules
 .env
 
 /server/db/*
+!.keep
+
 /config.js
