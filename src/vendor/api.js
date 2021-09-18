@@ -3,7 +3,7 @@ import sum from "utils/sum";
 
 export function fetchVendorQueueOrders() {
   // add price to schema
-  return query('/api/vendorqueue').then(
+  return query('/vendorqueue').then(
     ({ orders: queueOrders, username }) => ({
       username,
       queueOrders: queueOrders.map(
@@ -45,7 +45,7 @@ export function fetchVendorQueueOrders() {
 
 export function fetchVendorCompletedOrders() {
   // add price to schema
-  return query('/api/vendorcompleted').then((completedOrders) =>
+  return query('/vendorcompleted').then((completedOrders) =>
     completedOrders.map(
       ({
         id,
@@ -83,7 +83,7 @@ export function fetchVendorCompletedOrders() {
 }
 
 export function setOrderStatus(orderId, status) {
-  return query('/api/updatestatus', { orderId, status })
+  return query('/updatestatus', { orderId, status })
     .then(({ orderId: updatedOrderId, status: updatedStatus }) => ({
       orderId: updatedOrderId,
       status: updatedStatus,

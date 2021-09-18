@@ -3,7 +3,7 @@ import config from '../config';
 export function login(username, password) {
   let isOk;
   // return fetch(`/.netlify/functions/login`, {
-  return fetch(`${config.apiEndpoint}/api/login`, {
+  return fetch(`${config.apiEndpoint}/login`, {
     method: "POST",
     body: JSON.stringify({ username, password }),
     headers: {

@@ -30,15 +30,15 @@ export function query(path, params = null) {
 
 // export function fetchVendors(q = "") {
 export function fetchVendors() {
-  return query('/api/vendors');
+  return query('/vendors');
 }
 
 export function fetchVendorDetails(id) {
-  return query(`/api/vendor/${id}`)
+  return query(`/vendor/${id}`)
 }
 
 export function placeOrder({ vendorId, items }) {
-  return query('/api/placeorder', { vendorId, items })
+  return query('/placeorder', { vendorId, items })
     .then(({
       orderId,
       tokenNo,
@@ -59,7 +59,7 @@ export function placeOrder({ vendorId, items }) {
 }
 
 export function fetchPastOrders() {
-  return query('/api/userpastorders').then((completedOrders) => completedOrders.map(
+  return query('/userpastorders').then((completedOrders) => completedOrders.map(
     ({
       id,
       status,
@@ -96,7 +96,7 @@ export function fetchPastOrders() {
 }
 
 export function fetchQueueOrders() {
-  return query('/api/usercurrentorders').then(
+  return query('/usercurrentorders').then(
     ({ orders: queueOrders, username }) => ({
       username,
       queueOrders: queueOrders.map(
@@ -136,7 +136,7 @@ export function fetchQueueOrders() {
 }
 
 export function fetchIntl(vendorId) {
-  return query(`/api/intl/${vendorId}`).then((vendorIntl = []) =>
+  return query(`/intl/${vendorId}`).then((vendorIntl = []) =>
     vendorIntl.reduce(
       (
         { hindi, english },
