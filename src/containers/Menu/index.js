@@ -23,8 +23,8 @@ function Menu({
   } else if (error) {
     itemsList = <div class="black-70 tc f4">Failed to fetch items</div>;
   } else if (payload && payload.length) {
-    itemsList = payload.map(({ id, name, price, isVeg }) => (
-      <ItemCard key={id} id={id} name={name} price={price} isVeg={isVeg} />
+    itemsList = payload.map(({ id, name, price, is_veg }) => (
+      <ItemCard key={id} id={id} name={name} price={price} isVeg={is_veg} />
     ));
   }
 

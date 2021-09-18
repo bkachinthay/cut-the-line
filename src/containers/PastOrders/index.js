@@ -13,7 +13,7 @@ function PastOrders({ vendorPastOrders, getPastOrders }) {
       {vendorPastOrders.map(
         ({
           orderId,
-          customerName,
+          customerId,
           itemCount,
           price,
           items,
@@ -24,7 +24,7 @@ function PastOrders({ vendorPastOrders, getPastOrders }) {
           <li key={orderId} class="mv3">
             <QueueItem
               orderId={orderId}
-              customerName={customerName}
+              customerName={customerId}
               itemCount={itemCount}
               price={price}
               items={items}

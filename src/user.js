@@ -1,15 +1,19 @@
-import getGqlInstance from "utils/gql";
+import config from '../config';
 
 export function login(username, password) {
   let isOk;
-  return fetch(`/.netlify/functions/login`, {
+  // return fetch(`/.netlify/functions/login`, {
+  return fetch(`${config.apiEndpoint}/api/login`, {
     method: "POST",
     body: JSON.stringify({ username, password }),
+    headers: {
+      "Content-Type": "application/json" 
+    }
   })
     .then((res) => ((isOk = res.ok), res.json()))
     .then((res) => {
-      if (isOk && res.userToken) {
-        localStorage.setItem("userToken", res.userToken);
+      if (isOk && res.token) {
+        localStorage.setItem("userToken", res.token);
         return res;
       }
       localStorage.setItem("userToken", "");
@@ -17,17 +21,6 @@ export function login(username, password) {
     });
 }
 
-const logoutQuery = `mutation {
-  logoutUser
-}`;
-
 export function logout() {
-  const gql = getGqlInstance();
-  if (!gql) {
-    localStorage.removeItem("userToken");
-    return Promise.resolve(true);
-  }
-  return gql(logoutQuery)().then(
-    ({ logoutUser }) => (localStorage.removeItem("userToken"), logoutUser)
-  );
+  localStorage.removeItem("userToken");
 }

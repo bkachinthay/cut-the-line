@@ -31,7 +31,8 @@ const pusher = {
       this._pusher = new Pusher(config.pusherKey, {
         cluster: config.pusherCluster,
         forceTLS: true,
-        authEndpoint: "/.netlify/functions/auth",
+        // authEndpoint: "/.netlify/functions/auth",
+        authEndpoint: `${config.apiEndpoint}/api/pusher`,
         authTransport: "jsonp",
         auth: { params: { username } },
       });
