@@ -20,15 +20,22 @@ const updateStatus = require('./api/updateStatus');
 const intl = require('./api/intl');
 const pusher = require('./api/pusher');
 
+const allowedOrigins = process.env.CORS_ORIGIN.split(' ');
 const app = express();
 app.use(morgan('common'));
 app.use(helmet());
 app.use(cors({
-  origin: process.env.CORS_ORIGIN,
+  origin: (origin, callback) => {
+    if (allowedOrigins.indexOf('*') !== -1 || origin === undefined || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true); 
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  }
 }));
 app.use(express.json());
 
-app.get('/', (req, res) => {
+app.get('/api', (req, res) => {
   res.json({
     message: 'Cut the line API!',
   });
@@ -36,20 +43,20 @@ app.get('/', (req, res) => {
 
 // console.log('buildVendor : ', path.join(__dirname, 'build'));
 // app.use('/', express.static(path.join(__dirname, 'build')));
-app.use('/login', login);
-app.use('/pusher', pusher);
+app.use('/api/login', login);
+app.use('/api/pusher', pusher);
 
 app.use(verifyToken);
 
-app.use('/vendors', vendors);
-app.use('/vendor', vendor);
-app.use('/usercurrentorders', userCurrentOrders);
-app.use('/userpastorders', userPastOrders);
-app.use('/vendorcompleted', vendorCompleted);
-app.use('/vendorqueue', vendorQueue);
-app.use('/placeorder', placeOrder);
-app.use('/updatestatus', updateStatus);
-app.use('/intl', intl);
+app.use('/api/vendors', vendors);
+app.use('/api/vendor', vendor);
+app.use('/api/usercurrentorders', userCurrentOrders);
+app.use('/api/userpastorders', userPastOrders);
+app.use('/api/vendorcompleted', vendorCompleted);
+app.use('/api/vendorqueue', vendorQueue);
+app.use('/api/placeorder', placeOrder);
+app.use('/api/updatestatus', updateStatus);
+app.use('/api/intl', intl);
 
 app.use(notFound);
 
